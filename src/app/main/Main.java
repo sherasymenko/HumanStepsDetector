@@ -15,7 +15,7 @@ public class Main {
 	}
 
 	public static void openSheetGUI(String filePath) {
-		sheet = new OpenSheet(filePath,"", "");
+		sheet = new OpenSheet(filePath);
 		RefineryUtilities.centerFrameOnScreen(sheet);
 		sheet.setVisible(true);
 		sheet.pack();

@@ -24,6 +24,7 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
 
+import app.main.AppText;
 import app.main.SettingPanel;
 
 @SuppressWarnings("serial")
@@ -32,7 +33,6 @@ public class OpenSheet extends ApplicationFrame {
 	private XYSeriesCollection dataset = new XYSeriesCollection();
 	private XYSeries[] graphs;
 	private XYPlot xyPlot;
-	private String chartTitle;
 	private ChartPanel chartPanel;
 	private JFreeChart xylineChart;
 	private Timer timer;
@@ -44,9 +44,8 @@ public class OpenSheet extends ApplicationFrame {
 	private long sleepTime;
 	private int i = 0;
 
-	public OpenSheet(String filePath, String applicationTitle, String chartTitle) {
-		super(applicationTitle);
-		this.chartTitle = chartTitle;
+	public OpenSheet(String filePath) {
+		super(AppText.APPLICATION_TITLE.value());
 		try {
 			reader2 = new FileReader2(filePath, new Double(0));
 		} catch (IOException e) {
@@ -54,11 +53,11 @@ public class OpenSheet extends ApplicationFrame {
 		}
 		sleepTime = (long) (1 / reader2.getPeriod() * 1000);
 		graphs = new XYSeries[3];
-		graphs[0] = new XYSeries(AccelerationMeasurement.ACCELERATION_X);
-		graphs[1] = new XYSeries(AccelerationMeasurement.ACCELERATION_Y);
-		graphs[2] = new XYSeries(AccelerationMeasurement.ACCELERATION_Z);
-		xylineChart = ChartFactory.createXYLineChart(chartTitle, "Czas(s)", "Przyspieszenie(m/s2)", createDataset(),
-				PlotOrientation.VERTICAL, true, true, false);
+		graphs[0] = new XYSeries(AppText.ACCELERATION_X.value());
+		graphs[1] = new XYSeries(AppText.ACCELERATION_Y.value());
+		graphs[2] = new XYSeries(AppText.ACCELERATION_Z.value());
+		xylineChart = ChartFactory.createXYLineChart(AppText.CHART_TITLE.value(), AppText.X_AXIX_LABEL.value(),
+				AppText.Y_AXIX_LABEL.value(), createDataset(), PlotOrientation.VERTICAL, true, true, false);
 		chartPanel = new ChartPanel(xylineChart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(1000, 300));
 		chartPanel.setMouseZoomable(false);
@@ -96,7 +95,7 @@ public class OpenSheet extends ApplicationFrame {
 		dataset = new XYSeriesCollection();
 		index = 0;
 		timer.cancel();
-		xylineChart = ChartFactory.createXYLineChart(chartTitle, "", "", new XYSeriesCollection());
+		xylineChart = ChartFactory.createXYLineChart(AppText.CHART_TITLE.value(), "", "", new XYSeriesCollection());
 		chartPanel = new ChartPanel(xylineChart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(1600, 400));
 		chartPanel.setMouseZoomable(false);
