@@ -10,7 +10,9 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import javax.swing.JFrame;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
 
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
@@ -94,13 +96,10 @@ public class OpenSheet extends ApplicationFrame {
 		timeTest = 0;
 		dataset = new XYSeriesCollection();
 		index = 0;
-		timer.cancel();
-		xylineChart = ChartFactory.createXYLineChart(AppText.CHART_TITLE.value(), "", "", new XYSeriesCollection());
-		chartPanel = new ChartPanel(xylineChart);
-		chartPanel.setPreferredSize(new java.awt.Dimension(1600, 400));
-		chartPanel.setMouseZoomable(false);
-		content.add(chartPanel, BorderLayout.CENTER);
-		setContentPane(content);
+		if (timer != null) {
+			timer.cancel();
+		}
+		getFrames()[1].dispose();
 	}
 
 	public Map<String, String[]> convert(List<AccelerationMeasurement> m) {

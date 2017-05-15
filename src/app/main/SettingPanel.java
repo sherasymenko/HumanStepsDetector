@@ -143,6 +143,7 @@ public class SettingPanel extends JFrame {
 
 		start.addActionListener(new ActionListener() {
 			List<JRadioButton> radioList = Arrays.asList(speed1, speed2, speed3, speed4);
+
 			public void actionPerformed(ActionEvent e) {
 				if (start.getText().equals("Start")) {
 					chart = Main.getSheet();
@@ -168,8 +169,12 @@ public class SettingPanel extends JFrame {
 		});
 		resetSetting.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				chart.resetChart();
-				player.resetPlayer();
+				chart = Main.getSheet();
+				player = Main.getPlayer();
+				if (!selectedFilePath.getText().equals(""))
+					chart.resetChart();
+				if (!selectedVideoPath.getText().equals(""))
+					player.resetPlayer();
 				selectedFilePath.setText("");
 				selectedVideoPath.setText("");
 				speed1.setSelected(false);
