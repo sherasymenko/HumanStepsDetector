@@ -27,11 +27,9 @@ public class SceneGenerator {
 	private ChangeListener<Duration> progressChangeListener;
 	private MediaPlayer player;
 	private MediaView mediaView;
-	private double startTime;
 
-	public SceneGenerator(double startTime) {
+	public SceneGenerator() {
 		super();
-		this.startTime = startTime;
 	}
 
 	public MediaView getMediaView() {
@@ -52,9 +50,8 @@ public class SceneGenerator {
 				setCurrentlyPlaying(newPlayer);
 			}
 		});
-		//player.setStartTime(new Duration(startTime));
 		mediaView.setMediaPlayer(player);
-	
+
 		setCurrentlyPlaying(mediaView.getMediaPlayer());
 		layout.setStyle("-fx-background-color: cornsilk; -fx-font-size: 20; -fx-padding: 20; -fx-alignment: center;");
 		layout.getChildren()

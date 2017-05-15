@@ -10,6 +10,8 @@ import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+import app.main.AppText;
+
 public class FileReader2 {
 	private final Logger LOGGER = Logger.getLogger(FileReader.class.getName());
 	private List<AccelerationMeasurement> accelerationMeasurements = new ArrayList<AccelerationMeasurement>();
@@ -33,7 +35,7 @@ public class FileReader2 {
 		super();
 		try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
 			stream.forEach(e -> {
-				if (!e.contains("PacketCounter")) {
+				if (!e.contains(AppText.PACKET_COUNTER.value())) {
 					String rowData[] = e.split(";");
 					accelerationMeasurements.add(new AccelerationMeasurement(new Integer(rowData[0]),
 							new Double(rowData[1]), new Double(rowData[2]), new Double(rowData[3])));

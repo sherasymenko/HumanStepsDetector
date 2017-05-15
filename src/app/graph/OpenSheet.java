@@ -56,8 +56,8 @@ public class OpenSheet extends ApplicationFrame {
 		graphs[0] = new XYSeries(AppText.ACCELERATION_X.value());
 		graphs[1] = new XYSeries(AppText.ACCELERATION_Y.value());
 		graphs[2] = new XYSeries(AppText.ACCELERATION_Z.value());
-		xylineChart = ChartFactory.createXYLineChart(AppText.CHART_TITLE.value(), AppText.X_AXIX_LABEL.value(),
-				AppText.Y_AXIX_LABEL.value(), createDataset(), PlotOrientation.VERTICAL, true, true, false);
+		xylineChart = ChartFactory.createXYLineChart(AppText.CHART_TITLE.value(), AppText.X_AXIX_CHART_LABEL.value(),
+				AppText.Y_AXIX_CHART_LABEL.value(), createDataset(), PlotOrientation.VERTICAL, true, true, false);
 		chartPanel = new ChartPanel(xylineChart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(1000, 300));
 		chartPanel.setMouseZoomable(false);
@@ -117,10 +117,10 @@ public class OpenSheet extends ApplicationFrame {
 			dataZ[i] = String.valueOf(a.getAccelerationZ());
 			i++;
 		});
-		allData.put("Acc_X", dataX);
-		allData.put("Acc_Y", dataY);
-		allData.put("Acc_Z", dataZ);
-		allData.put("pc", pc);
+		allData.put(AppText.X_AXIS_IN_FILE.value(), dataX);
+		allData.put(AppText.Y_AXIS_IN_FILE.value(), dataY);
+		allData.put(AppText.Z_AXIS_IN_FILE.value(), dataZ);
+		allData.put(AppText.PACKET_COUNTER.value(), pc);
 		return allData;
 
 	}
@@ -186,10 +186,10 @@ public class OpenSheet extends ApplicationFrame {
 		public void run() {
 			try {
 				if ((reader.getRowNumber() - 1) != i) {
-					graphs[0].add(time, new Double(allData.get("Acc_X")[i]));
-					graphs[1].add(time, new Double(allData.get("Acc_Y")[i]));
-					graphs[2].add(time, new Double(allData.get("Acc_Z")[i]));
-					if (startList.contains(new Integer(allData.get("pc")[i]))) {
+					graphs[0].add(time, new Double(allData.get(AppText.X_AXIS_IN_FILE.value())[i]));
+					graphs[1].add(time, new Double(allData.get(AppText.Y_AXIS_IN_FILE.value())[i]));
+					graphs[2].add(time, new Double(allData.get(AppText.Z_AXIS_IN_FILE.value())[i]));
+					if (startList.contains(new Integer(allData.get(AppText.PACKET_COUNTER.value())[i]))) {
 						System.out.println("!!!!!!!!!!!!!!!!!!!testtest");
 						Marker m3 = new ValueMarker(time, Color.WHITE, new BasicStroke(1.5f));
 						m3.setPaint(Color.BLACK);

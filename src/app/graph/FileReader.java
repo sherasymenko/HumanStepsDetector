@@ -16,6 +16,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
+import app.main.AppText;
+
 public class FileReader {
 	/*private final Logger LOGGER = Logger.getLogger(FileReader.class.getName());
 	private final String filePath;
@@ -51,7 +53,7 @@ public class FileReader {
 	private void readFromFile(String filePath) {
 	try (Stream<String> stream = Files.lines(Paths.get(filePath))) {	
 		stream.forEach(e -> {
-			if(e.contains("PacketCounter")){
+			if(e.contains(AppText.PACKET_COUNTER.value())){
 				System.out.println("first");
 			} else {System.out.println("not sfirst");}
 			
@@ -138,7 +140,7 @@ public class FileReader {
 			headerLineIndex = 0;
 			while ((line = br.readLine()) != null) {
 				line = line.trim();
-				if (line.contains("PacketCounter")) {
+				if (line.contains(AppText.PACKET_COUNTER.value())) {
 					headers = line.split(";");
 					break;
 				}

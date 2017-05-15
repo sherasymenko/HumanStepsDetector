@@ -1,15 +1,11 @@
 package app.graph;
 
 public class AccelerationMeasurement {
-	public static final String ACCELERATION_X = "Przyspieszenie X";
-	public static final String ACCELERATION_Y = "Przyspieszenie Y";
-	public static final String ACCELERATION_Z = "Przyspieszenie Z";
 	private int packetCounter;
 	private double accelerationX;
 	private double accelerationY;
 	private double accelerationZ;
 	public boolean isMotionless;
-
 
 	public AccelerationMeasurement(int packetCounter, double accelerationX, double accelerationY, double accelerationZ) {
 		super();
@@ -58,5 +54,4 @@ public class AccelerationMeasurement {
 	public void setMotionless(boolean isMotionless) {
 		this.isMotionless = isMotionless;
 	}
-	
 }

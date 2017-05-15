@@ -8,11 +8,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import app.main.AppText;
+
 public class DataAnalyzer {
 
 	public List analyze(Map data) {
-		String[] values = (String[]) data.get("Acc_Z");
-		String[] packetCounter = (String[]) data.get("pc");
+		String[] values = (String[]) data.get(AppText.Z_AXIS_IN_FILE.value());
+		String[] packetCounter = (String[]) data.get(AppText.PACKET_COUNTER.value());
 		// sortDesc(values);
 		showChanges(values);
 		// getStartsOfSteps(getTops(data, packetCounter, values));
@@ -21,7 +23,8 @@ public class DataAnalyzer {
 	}
 
 	public double getMaxValue(Map data) {
-		String[] graphs = { "Acc_X", "Acc_Y", "Acc_Z" };
+		String[] graphs = { AppText.X_AXIS_IN_FILE.value(), AppText.Y_AXIS_IN_FILE.value(),
+				AppText.Z_AXIS_IN_FILE.value() };
 		String[] values = (String[]) data.get(graphs[0]);
 		// System.out.println(" values.length " + values.length);
 		double maxValue = new Double(values[0]);

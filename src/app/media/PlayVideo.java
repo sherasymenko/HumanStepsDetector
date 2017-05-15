@@ -11,6 +11,7 @@ public class PlayVideo {
 	private SceneGenerator sg;
 	private JFXPanel fxPanel;
 	private JFrame frame;
+
 	public void initAndShowGUI() {
 		frame = new JFrame("FX");
 		fxPanel = new JFXPanel();
@@ -30,8 +31,8 @@ public class PlayVideo {
 	public void pauseButton(String videoPath) {
 		sg.getMediaView().getMediaPlayer().pause();
 	}
-	
-	public void resetPlayer(){
+
+	public void resetPlayer() {
 		frame.getContentPane().removeAll();
 		fxPanel = new JFXPanel();
 		frame.add(fxPanel);
@@ -43,7 +44,7 @@ public class PlayVideo {
 	}
 
 	public void selectVideo(String videoPath) throws MediaException {
-		sg = new SceneGenerator(new Double(0));
+		sg = new SceneGenerator();
 		Scene scene = sg.createScene(videoPath);
 		fxPanel.setScene(scene);
 	}
