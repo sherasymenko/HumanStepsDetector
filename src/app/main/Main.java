@@ -7,17 +7,34 @@ import app.graph.OpenSheet;
 import app.media.PlayVideo;
 
 public class Main {
-	private static OpenSheet sheet = new OpenSheet("", "");
+	private static OpenSheet sheet;
 	private static PlayVideo player = new PlayVideo();
 
 	public static void main(String[] args) {
 		openSettingsGUI();
 	}
 
-	public static void openSheetGUI() {
+	public static void openSheetGUI(String filePath) {
+		sheet = new OpenSheet(filePath,"", "");
 		RefineryUtilities.centerFrameOnScreen(sheet);
 		sheet.setVisible(true);
 		sheet.pack();
+	}
+
+	public static OpenSheet getSheet() {
+		return sheet;
+	}
+
+	public static void setSheet(OpenSheet sheet) {
+		Main.sheet = sheet;
+	}
+
+	public static PlayVideo getPlayer() {
+		return player;
+	}
+
+	public static void setPlayer(PlayVideo player) {
+		Main.player = player;
 	}
 
 	public static void openMediaPlayerGUI() {
@@ -30,7 +47,7 @@ public class Main {
 	}
 
 	private static void openSettingsGUI() {
-		SettingPanel settingPanel = new SettingPanel(sheet, player);
+		SettingPanel settingPanel = new SettingPanel();
 		settingPanel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 }

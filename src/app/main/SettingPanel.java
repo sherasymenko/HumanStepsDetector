@@ -53,10 +53,8 @@ public class SettingPanel extends JFrame {
 	private OpenSheet chart;
 	private PlayVideo player;
 
-	public SettingPanel(OpenSheet chart, PlayVideo player) {
+	public SettingPanel() {
 		super("Panel sterowania");
-		this.chart = chart;
-		this.player = player;
 		elementsSetting();
 		addElementsToPanel();
 		panelSetting();
@@ -72,13 +70,9 @@ public class SettingPanel extends JFrame {
 				fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 				int result = fileChooser.showOpenDialog(newPanel);
 				if (result == JFileChooser.APPROVE_OPTION) {
-					Main.openSheetGUI();
 					File selectedFile = fileChooser.getSelectedFile();
 					selectedFilePath.setText(selectedFile.getAbsolutePath());
-					try {
-						chart.addData(selectedFilePath.getText());
-					} catch (IOException e1) {
-					}
+					Main.openSheetGUI(selectedFile.getAbsolutePath());
 				}
 			}
 		});
