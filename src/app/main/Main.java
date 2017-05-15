@@ -11,18 +11,16 @@ public class Main {
 	private static PlayVideo player = new PlayVideo();
 
 	public static void main(String[] args) {
-		openSheetGUI();
-		// openMediaPlayerGUI();
 		openSettingsGUI();
 	}
 
-	private static void openSheetGUI() {
+	public static void openSheetGUI() {
 		RefineryUtilities.centerFrameOnScreen(sheet);
 		sheet.setVisible(true);
 		sheet.pack();
 	}
 
-	private static void openMediaPlayerGUI() {
+	public static void openMediaPlayerGUI() {
 		SwingUtilities.invokeLater(new Runnable() {
 			@Override
 			public void run() {

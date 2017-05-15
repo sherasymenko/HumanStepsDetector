@@ -92,8 +92,8 @@ public class OpenSheet extends ApplicationFrame {
 		setContentPane(content);
 	}
 
-	public void addData(String filePath, double startTime) throws IOException {
-		reader2 = new FileReader2(filePath, startTime);
+	public void addData(String filePath) throws IOException {
+		reader2 = new FileReader2(filePath, new Double(0));
 		sleepTime = (long) (1 / reader2.getPeriod() * 1000);
 		graphs = new XYSeries[3];
 		graphs[0] = new XYSeries(AccelerationMeasurement.ACCELERATION_X);

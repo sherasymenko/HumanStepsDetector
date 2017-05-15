@@ -42,8 +42,8 @@ public class PlayVideo {
 		frame.repaint();
 	}
 
-	public void selectVideo(String videoPath, double startTime) throws MediaException {
-		sg = new SceneGenerator(startTime);
+	public void selectVideo(String videoPath) throws MediaException {
+		sg = new SceneGenerator(new Double(0));
 		Scene scene = sg.createScene(videoPath);
 		fxPanel.setScene(scene);
 	}
