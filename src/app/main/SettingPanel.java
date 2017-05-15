@@ -146,6 +146,7 @@ public class SettingPanel extends JFrame {
 			List<JRadioButton> radioList = Arrays.asList(speed1, speed2, speed3, speed4);
 			public void actionPerformed(ActionEvent e) {
 				if (start.getText().equals("Start")) {
+					chart = Main.getSheet();
 					if (!selectedFilePath.getText().equals(""))
 						chart.startDraw(selectedFilePath.getText(), false, getSpeed(radioList));
 					if (!selectedVideoPath.getText().equals(""))
