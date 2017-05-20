@@ -46,20 +46,31 @@ public class OpenSheet extends ApplicationFrame {
 	private long sleepTime;
 	private int i = 0;
 
-	public OpenSheet(String filePath) {
+	public OpenSheet(String filePath, String chartType, Double frequency) {
 		super(AppText.APPLICATION_TITLE.value());
 		try {
-			reader2 = new FileReader2(filePath, new Double(0));
+			reader2 = new FileReader2(filePath, new Double(0), frequency);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		sleepTime = (long) (1 / reader2.getPeriod() * 1000);
+		sleepTime = (long) (1 / reader2.getFrequency() * 1000);
 		graphs = new XYSeries[3];
-		graphs[0] = new XYSeries(AppText.ACCELERATION_X.value());
-		graphs[1] = new XYSeries(AppText.ACCELERATION_Y.value());
-		graphs[2] = new XYSeries(AppText.ACCELERATION_Z.value());
-		xylineChart = ChartFactory.createXYLineChart(AppText.CHART_TITLE.value(), AppText.X_AXIX_CHART_LABEL.value(),
-				AppText.Y_AXIX_CHART_LABEL.value(), createDataset(), PlotOrientation.VERTICAL, true, true, false);
+		if (chartType.equals(AppText.ACC_CHART.value())) {
+			graphs[0] = new XYSeries(AppText.ACC_X.value());
+			graphs[1] = new XYSeries(AppText.ACC_Y.value());
+			graphs[2] = new XYSeries(AppText.ACC_Z.value());
+			xylineChart = ChartFactory.createXYLineChart(AppText.ACC_CHART_TITLE.value(),
+					AppText.X_AXIX_CHART_LABEL.value(), AppText.Y_AXIX_ACC_CHART_LABEL.value(), createDataset(),
+					PlotOrientation.VERTICAL, true, true, false);
+		} else {
+			graphs[0] = new XYSeries(AppText.EULER_X.value());
+			graphs[1] = new XYSeries(AppText.EULER_Y.value());
+			graphs[2] = new XYSeries(AppText.EULER_Z.value());
+			xylineChart = ChartFactory.createXYLineChart(AppText.EULER_CHART_TITLE.value(),
+					AppText.X_AXIX_CHART_LABEL.value(), AppText.Y_AXIX_EULER_CHART_LABEL.value(), createDataset(),
+					PlotOrientation.VERTICAL, true, true, false);
+		}
+
 		chartPanel = new ChartPanel(xylineChart);
 		chartPanel.setPreferredSize(new java.awt.Dimension(1000, 300));
 		chartPanel.setMouseZoomable(false);
@@ -116,9 +127,9 @@ public class OpenSheet extends ApplicationFrame {
 			dataZ[i] = String.valueOf(a.getAccelerationZ());
 			i++;
 		});
-		allData.put(AppText.X_AXIS_IN_FILE.value(), dataX);
-		allData.put(AppText.Y_AXIS_IN_FILE.value(), dataY);
-		allData.put(AppText.Z_AXIS_IN_FILE.value(), dataZ);
+		allData.put(AppText.ACC_X_AXIS_IN_FILE.value(), dataX);
+		allData.put(AppText.ACC_Y_AXIS_IN_FILE.value(), dataY);
+		allData.put(AppText.ACC_Z_AXIS_IN_FILE.value(), dataZ);
 		allData.put(AppText.PACKET_COUNTER.value(), pc);
 		return allData;
 
@@ -137,7 +148,7 @@ public class OpenSheet extends ApplicationFrame {
 		timer = new Timer();
 		Map<String, String[]> allDataTest = convert(reader2.getAccelerationMeasurements());
 		draw = new Draw(reader2, timer, index, timeTest, isClean, allDataTest, startList);
-		long period = (long) ((1 / reader2.getPeriod() * 1000) / speed);
+		long period = (long) ((1 / reader2.getFrequency() * 1000) / speed);
 		timer.schedule(draw, 0, period);
 	}
 
@@ -185,16 +196,16 @@ public class OpenSheet extends ApplicationFrame {
 		public void run() {
 			try {
 				if ((reader.getRowNumber() - 1) != i) {
-					graphs[0].add(time, new Double(allData.get(AppText.X_AXIS_IN_FILE.value())[i]));
-					graphs[1].add(time, new Double(allData.get(AppText.Y_AXIS_IN_FILE.value())[i]));
-					graphs[2].add(time, new Double(allData.get(AppText.Z_AXIS_IN_FILE.value())[i]));
+					graphs[0].add(time, new Double(allData.get(AppText.ACC_X_AXIS_IN_FILE.value())[i]));
+					graphs[1].add(time, new Double(allData.get(AppText.ACC_Y_AXIS_IN_FILE.value())[i]));
+					graphs[2].add(time, new Double(allData.get(AppText.ACC_Z_AXIS_IN_FILE.value())[i]));
 					if (startList.contains(new Integer(allData.get(AppText.PACKET_COUNTER.value())[i]))) {
 						System.out.println("!!!!!!!!!!!!!!!!!!!testtest");
 						Marker m3 = new ValueMarker(time, Color.WHITE, new BasicStroke(1.5f));
 						m3.setPaint(Color.BLACK);
 						xylineChart.getXYPlot().addDomainMarker(m3);
 					}
-					time = time + 1 / reader.getPeriod();
+					time = time + 1 / reader.getFrequency();
 					i++;
 				} else {
 					SettingPanel.setStartButton();

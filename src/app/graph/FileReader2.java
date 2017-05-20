@@ -28,11 +28,12 @@ public class FileReader2 {
 	private double minY;
 	private int headerLineIndex;
 	private Map<String, String[]> allData = new HashMap<String, String[]>();
-	private double period;
+	private double frequency;
 	private double startTime;
 
-	public FileReader2(String filePath, double startTime) throws IOException {
+	public FileReader2(String filePath, double startTime, double frequency) throws IOException {
 		super();
+		this.frequency = frequency;
 		try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
 			stream.forEach(e -> {
 				if (!e.contains(AppText.PACKET_COUNTER.value())) {
@@ -70,8 +71,7 @@ public class FileReader2 {
 			e.printStackTrace();
 		}
 		this.startTime = startTime;
-		this.period = 75.0;
-		this.maxX = 1 / period * rowNumber;
+		this.maxX = 1 / frequency * rowNumber;
 		this.minX = new Double(0);
 		this.maxY = Double.max(Double.max(maxAccX, maxAccY), maxAccZ);
 		this.minY = Double.min(Double.min(minAccX, minAccY), minAccZ);
@@ -189,12 +189,12 @@ public class FileReader2 {
 		this.allData = allData;
 	}
 
-	public double getPeriod() {
-		return period;
+	public double getFrequency() {
+		return frequency;
 	}
 
-	public void setPeriod(double period) {
-		this.period = period;
+	public void setFrequency(double frequency) {
+		this.frequency = frequency;
 	}
 
 	public double getStartTime() {

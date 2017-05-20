@@ -21,12 +21,12 @@ public class Main {
 		settingPanel.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	}
 
-	public static void openSheetGUI(String filePath) {
+	/*public static void openSheetGUI(String filePath) {
 		sheet = new OpenSheet(filePath);
 		RefineryUtilities.centerFrameOnScreen(sheet);
 		sheet.setVisible(true);
 		sheet.pack();
-	}
+	}*/
 
 	public static void openMediaPlayerGUI() {
 		SwingUtilities.invokeLater(new Runnable() {

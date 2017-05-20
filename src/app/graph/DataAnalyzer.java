@@ -12,8 +12,8 @@ import app.main.AppText;
 
 public class DataAnalyzer {
 
-	public List analyze(Map data) {
-		String[] values = (String[]) data.get(AppText.Z_AXIS_IN_FILE.value());
+	/*public List analyze(Map data) {
+		String[] values = (String[]) data.get(AppText.ACC_Z_AXIS_IN_FILE.value());
 		String[] packetCounter = (String[]) data.get(AppText.PACKET_COUNTER.value());
 		// sortDesc(values);
 		showChanges(values);
@@ -21,10 +21,10 @@ public class DataAnalyzer {
 		return getStartTimeOfSteps(packetCounter, getStartsOfSteps(getTops(data, packetCounter, values)));
 
 	}
-
+*/
 	public double getMaxValue(Map data) {
-		String[] graphs = { AppText.X_AXIS_IN_FILE.value(), AppText.Y_AXIS_IN_FILE.value(),
-				AppText.Z_AXIS_IN_FILE.value() };
+		String[] graphs = { AppText.ACC_X_AXIS_IN_FILE.value(), AppText.ACC_Y_AXIS_IN_FILE.value(),
+				AppText.ACC_Z_AXIS_IN_FILE.value() };
 		String[] values = (String[]) data.get(graphs[0]);
 		// System.out.println(" values.length " + values.length);
 		double maxValue = new Double(values[0]);
@@ -125,7 +125,7 @@ public class DataAnalyzer {
 		return startsOfSteps;
 	}
 
-	public List getStartTimeOfSteps(String[] packetCounter, Integer[] startsOfSteps) {
+	/*public List getStartTimeOfSteps(String[] packetCounter, Integer[] startsOfSteps) {
 		List times = new ArrayList();
 		double time = 0;
 		for (int i = 0; i < packetCounter.length; i++) {
@@ -145,7 +145,7 @@ public class DataAnalyzer {
 			// System.out.println("Time " + times.get(i));
 		}
 		return times;
-	}
+	}*/
 
 	public int intervalCount = 1;
 	public int intervalNumber = 1;

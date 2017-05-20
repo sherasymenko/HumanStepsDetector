@@ -21,6 +21,8 @@ import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
 
+import org.jfree.ui.RefineryUtilities;
+
 import app.graph.OpenSheet;
 import app.media.PlayVideo;
 import javafx.scene.media.MediaException;
@@ -28,8 +30,10 @@ import javafx.scene.media.MediaException;
 @SuppressWarnings("serial")
 public class SettingPanel extends JFrame {
 	private JLabel errorMessage = new JLabel("Znaleziono b³êdy: ");
-	private JButton selectFile = new JButton("wybierz plik...");
-	private JTextField selectedFilePath = new JTextField("", 50);
+	private JButton selectAccFile = new JButton("wybierz plik przyspieszenia...");
+	private JTextField selectedAccFilePath = new JTextField("", 50);
+	private JButton selectEulerFile = new JButton("wybierz plik k¹tów...");
+	private JTextField selectedEulerFilePath = new JTextField("", 50);
 	private JButton selectVideo = new JButton("wybierz filmik...");
 	private JTextField selectedVideoPath = new JTextField("", 50);
 	private JLabel speedLabel = new JLabel("Szybkoœæ");
@@ -38,7 +42,7 @@ public class SettingPanel extends JFrame {
 	private JRadioButton speed3 = new JRadioButton("0.5");
 	private JRadioButton speed4 = new JRadioButton("1");
 	private JLabel frequencyLabel = new JLabel("Czêstotliwoœæ");
-	private JTextField frequency = new JTextField("", 10);
+	private JTextField frequency = new JTextField("75", 10);
 	private JLabel frequencyMeasurement = new JLabel("Hz");
 	private static JButton start = new JButton("Start");
 	private JButton resetSetting = new JButton("Wyczyœæ ustawienia");
@@ -48,9 +52,12 @@ public class SettingPanel extends JFrame {
 	private JPanel line3 = new JPanel();
 	private JPanel line4 = new JPanel();
 	private JPanel line5 = new JPanel();
+	private JPanel line6 = new JPanel();
 	private GridBagConstraints constraints = new GridBagConstraints();
-	private OpenSheet chart;
+	private OpenSheet accChart;
+	private OpenSheet eulerChart;
 	private PlayVideo player;
+
 
 	public SettingPanel() {
 		super("Panel sterowania");
@@ -63,20 +70,43 @@ public class SettingPanel extends JFrame {
 		errorMessage.setVisible(false);
 		errorMessage.setForeground(Color.red);
 
-		selectFile.addActionListener(new ActionListener() {
+		selectAccFile.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fileChooser = new JFileChooser();
 				fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 				int result = fileChooser.showOpenDialog(newPanel);
 				if (result == JFileChooser.APPROVE_OPTION) {
 					File selectedFile = fileChooser.getSelectedFile();
-					selectedFilePath.setText(selectedFile.getAbsolutePath());
-					Main.openSheetGUI(selectedFile.getAbsolutePath());
+					selectedAccFilePath.setText(selectedFile.getAbsolutePath());
+					accChart = new OpenSheet(selectedFile.getAbsolutePath(), AppText.ACC_CHART.value(), new Double(frequency.getText()));
+					RefineryUtilities.centerFrameOnScreen(accChart);
+					accChart.setVisible(true);
+					accChart.pack();
+					//Main.openSheetGUI(selectedFile.getAbsolutePath());
 				}
 			}
 		});
-		selectedFilePath.setEditable(false);
-
+		selectedAccFilePath.setEditable(false);
+		
+		
+		selectEulerFile.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				JFileChooser fileChooser = new JFileChooser();
+				fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
+				int result = fileChooser.showOpenDialog(newPanel);
+				if (result == JFileChooser.APPROVE_OPTION) {
+					File selectedFile = fileChooser.getSelectedFile();
+					selectedEulerFilePath.setText(selectedFile.getAbsolutePath());
+					eulerChart = new OpenSheet(selectedFile.getAbsolutePath(), AppText.EULER_CHART.value(), new Double(frequency.getText()));
+					RefineryUtilities.centerFrameOnScreen(eulerChart);
+					eulerChart.setVisible(true);
+					eulerChart.pack();
+					//Main.openSheetGUI(selectedFile.getAbsolutePath());
+				}
+			}
+		});
+		selectedEulerFilePath.setEditable(false);
+		
 		selectVideo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JFileChooser fileChooser = new JFileChooser();
@@ -146,22 +176,28 @@ public class SettingPanel extends JFrame {
 
 			public void actionPerformed(ActionEvent e) {
 				if (start.getText().equals("Start")) {
-					chart = Main.getSheet();
-					if (!selectedFilePath.getText().equals(""))
-						chart.startDraw(selectedFilePath.getText(), false, getSpeed(radioList));
+					//accChart = Main.getSheet();
+					if (!selectedAccFilePath.getText().equals(""))
+						accChart.startDraw(selectedAccFilePath.getText(), false, getSpeed(radioList));
+					if (!selectedEulerFilePath.getText().equals(""))
+						eulerChart.startDraw(selectedEulerFilePath.getText(), false, getSpeed(radioList));
 					if (!selectedVideoPath.getText().equals(""))
 						player.startButton(selectedVideoPath.getText(), false, getSpeed(radioList));
 					start.setText("Pauza");
 				} else if (start.getText().equals("Pauza")) {
-					if (!selectedFilePath.getText().equals(""))
+					if (!selectedAccFilePath.getText().equals(""))
 						player.pauseButton(selectedVideoPath.getText());
-					if (!selectedFilePath.getText().equals(""))
-						chart.pauseDraw(selectedFilePath.getText());
+					if (!selectedAccFilePath.getText().equals(""))
+						accChart.pauseDraw(selectedAccFilePath.getText());
+					if (!selectedEulerFilePath.getText().equals(""))
+						eulerChart.pauseDraw(selectedEulerFilePath.getText());
 					start.setText("Start");
 				} else if (start.getText().equals("Reset")) {
-					if (!selectedFilePath.getText().equals(""))
-						chart.startDraw(selectedFilePath.getText(), true, getSpeed(radioList));
-					if (!selectedFilePath.getText().equals(""))
+					if (!selectedAccFilePath.getText().equals(""))
+						accChart.startDraw(selectedAccFilePath.getText(), true, getSpeed(radioList));
+					if (!selectedEulerFilePath.getText().equals(""))
+						eulerChart.startDraw(selectedEulerFilePath.getText(), true, getSpeed(radioList));
+					if (!selectedAccFilePath.getText().equals(""))
 						player.startButton(selectedVideoPath.getText(), true, getSpeed(radioList));
 					start.setText("Pauza");
 				}
@@ -169,13 +205,13 @@ public class SettingPanel extends JFrame {
 		});
 		resetSetting.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				chart = Main.getSheet();
+				accChart = Main.getSheet();
 				player = Main.getPlayer();
-				if (!selectedFilePath.getText().equals(""))
-					chart.resetChart();
+				if (!selectedAccFilePath.getText().equals(""))
+					accChart.resetChart();
 				if (!selectedVideoPath.getText().equals(""))
 					player.resetPlayer();
-				selectedFilePath.setText("");
+				selectedAccFilePath.setText("");
 				selectedVideoPath.setText("");
 				speed1.setSelected(false);
 				speed2.setSelected(false);
@@ -196,25 +232,28 @@ public class SettingPanel extends JFrame {
 		speed4.setName("1");
 		speed4.setSelected(true);
 		line1.add(errorMessage);
-		line2.add(selectFile);
-		line2.add(selectedFilePath);
-		line3.add(selectVideo);
-		line3.add(selectedVideoPath);
-		line4.add(speedLabel);
-		line4.add(speed1);
-		line4.add(speed2);
-		line4.add(speed3);
-		line4.add(speed4);
-		line4.add(frequencyLabel);
-		line4.add(frequency);
-		line4.add(frequencyMeasurement);
-		line5.add(start);
-		line5.add(resetSetting);
+		line2.add(selectAccFile);
+		line2.add(selectedAccFilePath);
+		line3.add(selectEulerFile);
+		line3.add(selectedEulerFilePath);
+		line4.add(selectVideo);
+		line4.add(selectedVideoPath);
+		line5.add(speedLabel);
+		line5.add(speed1);
+		line5.add(speed2);
+		line5.add(speed3);
+		line5.add(speed4);
+		line5.add(frequencyLabel);
+		line5.add(frequency);
+		line5.add(frequencyMeasurement);
+		line6.add(start);
+		line6.add(resetSetting);
 		newPanel.add(line1);
 		newPanel.add(line2);
 		newPanel.add(line3);
 		newPanel.add(line4);
 		newPanel.add(line5);
+		newPanel.add(line6);
 	}
 
 	private void panelSetting() {
