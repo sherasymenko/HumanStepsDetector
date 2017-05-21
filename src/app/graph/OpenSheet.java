@@ -3,6 +3,7 @@ package app.graph;
 import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Frame;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
@@ -10,7 +11,6 @@ import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
@@ -48,6 +48,7 @@ public class OpenSheet extends ApplicationFrame {
 
 	public OpenSheet(String filePath, String chartType, Double frequency) {
 		super(AppText.APPLICATION_TITLE.value());
+		
 		try {
 			reader2 = new FileReader2(filePath, new Double(0), frequency);
 		} catch (IOException e) {
@@ -94,9 +95,11 @@ public class OpenSheet extends ApplicationFrame {
 		chartPanel.setChart(xylineChart);
 		content.add(chartPanel, BorderLayout.CENTER);
 		setContentPane(content);
+		Frame frame = (Frame) SwingUtilities.getRoot(content);
+		frame.setName(chartType);
 	}
 
-	public void resetChart() {
+	public void resetChart(String chartType) {
 		content.removeAll();
 		content.revalidate();
 		content.repaint();
@@ -110,7 +113,12 @@ public class OpenSheet extends ApplicationFrame {
 		if (timer != null) {
 			timer.cancel();
 		}
-		getFrames()[1].dispose();
+
+		for (int i = 0; i < getFrames().length; i++) {
+			if (getFrames()[i].getName().equals(chartType)) {
+				getFrames()[i].dispose();
+			}
+		}
 	}
 
 	public Map<String, String[]> convert(List<AccelerationMeasurement> m) {
@@ -136,7 +144,7 @@ public class OpenSheet extends ApplicationFrame {
 	}
 
 	public void startDraw(String filePath, boolean toClean, double speed) {
-		DataAnalyzer a = new DataAnalyzer();
+		AccelerationDataAnalyzer a = new AccelerationDataAnalyzer();
 		List<Integer> startList = a.start(reader2.getAccelerationMeasurements());
 		if (toClean) {
 			for (int i = 0; i < graphs.length; i++) {

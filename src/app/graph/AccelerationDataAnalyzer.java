@@ -10,7 +10,7 @@ import java.util.Map;
 
 import app.main.AppText;
 
-public class DataAnalyzer {
+public class AccelerationDataAnalyzer {
 
 	/*public List analyze(Map data) {
 		String[] values = (String[]) data.get(AppText.ACC_Z_AXIS_IN_FILE.value());
