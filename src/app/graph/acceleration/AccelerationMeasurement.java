@@ -1,4 +1,4 @@
-package app.graph;
+package app.graph.acceleration;
 
 public class AccelerationMeasurement {
 	private int packetCounter;

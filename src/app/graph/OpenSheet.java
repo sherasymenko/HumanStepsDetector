@@ -26,6 +26,12 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
 
+import app.graph.acceleration.AccelerationDataAnalyzer;
+import app.graph.acceleration.AccelerationFileReader;
+import app.graph.acceleration.AccelerationMeasurement;
+import app.graph.euler_orientation.EulerOrientationDataAnalyzer;
+import app.graph.euler_orientation.EulerOrientationFileReader;
+import app.graph.euler_orientation.EulerOrientationMeasurement;
 import app.main.AppText;
 import app.main.SettingPanel;
 
@@ -38,23 +44,31 @@ public class OpenSheet extends ApplicationFrame {
 	private ChartPanel chartPanel;
 	private JFreeChart xylineChart;
 	private Timer timer;
-	private FileReader2 reader2;
+	private AccelerationFileReader accReader;
+	private EulerOrientationFileReader eulerReader;
 	private Draw draw = new Draw();
 	private int index = 0;
 	private double timeTest = 0;
 	private boolean isClean = false;
-	private long sleepTime;
+	// private long sleepTime;
 	private int i = 0;
+	private Double frequency;
+	private String chartType;
 
 	public OpenSheet(String filePath, String chartType, Double frequency) {
 		super(AppText.APPLICATION_TITLE.value());
-		
+		this.frequency = frequency;
+		this.chartType = chartType;
 		try {
-			reader2 = new FileReader2(filePath, new Double(0), frequency);
+			if (chartType.equals(AppText.ACC_CHART.value())) {
+				accReader = new AccelerationFileReader(filePath, new Double(0), frequency);
+			} else {
+				eulerReader = new EulerOrientationFileReader(filePath, new Double(0), frequency);
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		sleepTime = (long) (1 / reader2.getFrequency() * 1000);
+		// sleepTime = (long) (1 / reader2.getFrequency() * 1000);
 		graphs = new XYSeries[3];
 		if (chartType.equals(AppText.ACC_CHART.value())) {
 			graphs[0] = new XYSeries(AppText.ACC_X.value());
@@ -76,8 +90,13 @@ public class OpenSheet extends ApplicationFrame {
 		chartPanel.setPreferredSize(new java.awt.Dimension(1000, 300));
 		chartPanel.setMouseZoomable(false);
 		xyPlot = xylineChart.getXYPlot();
-		xyPlot.getDomainAxis().setRange(reader2.getMinX(), reader2.getMaxX());
-		xyPlot.getRangeAxis().setRange(reader2.getMinY(), reader2.getMaxY());
+		if (chartType.equals(AppText.ACC_CHART.value())) {
+			xyPlot.getDomainAxis().setRange(accReader.getMinX(), accReader.getMaxX());
+			xyPlot.getRangeAxis().setRange(accReader.getMinY(), accReader.getMaxY());
+		} else {
+			xyPlot.getDomainAxis().setRange(eulerReader.getMinX(), eulerReader.getMaxX());
+			xyPlot.getRangeAxis().setRange(eulerReader.getMinY(), eulerReader.getMaxY());
+		}
 		xyPlot.setBackgroundPaint(Color.WHITE);
 		xyPlot.setRangeGridlinePaint(Color.BLACK);
 		xyPlot.setDomainGridlinePaint(Color.BLACK);
@@ -121,7 +140,7 @@ public class OpenSheet extends ApplicationFrame {
 		}
 	}
 
-	public Map<String, String[]> convert(List<AccelerationMeasurement> m) {
+	public Map<String, String[]> convertAcc(List<AccelerationMeasurement> m) {
 		Map<String, String[]> allData = new HashMap<String, String[]>();
 		String[] dataX = new String[m.size()];
 		String[] dataY = new String[m.size()];
@@ -143,9 +162,29 @@ public class OpenSheet extends ApplicationFrame {
 
 	}
 
+	public Map<String, String[]> convertEuler(List<EulerOrientationMeasurement> m) {
+		Map<String, String[]> allData = new HashMap<String, String[]>();
+		String[] dataX = new String[m.size()];
+		String[] dataY = new String[m.size()];
+		String[] dataZ = new String[m.size()];
+		String[] pc = new String[m.size()];
+		i = 0;
+		m.forEach(a -> {
+			pc[i] = String.valueOf(a.getPacketCounter());
+			dataX[i] = String.valueOf(a.getRoll());
+			dataY[i] = String.valueOf(a.getPitch());
+			dataZ[i] = String.valueOf(a.getYaw());
+			i++;
+		});
+		allData.put(AppText.ACC_X_AXIS_IN_FILE.value(), dataX);
+		allData.put(AppText.ACC_Y_AXIS_IN_FILE.value(), dataY);
+		allData.put(AppText.ACC_Z_AXIS_IN_FILE.value(), dataZ);
+		allData.put(AppText.PACKET_COUNTER.value(), pc);
+		return allData;
+
+	}
+
 	public void startDraw(String filePath, boolean toClean, double speed) {
-		AccelerationDataAnalyzer a = new AccelerationDataAnalyzer();
-		List<Integer> startList = a.start(reader2.getAccelerationMeasurements());
 		if (toClean) {
 			for (int i = 0; i < graphs.length; i++) {
 				graphs[i].clear();
@@ -154,14 +193,26 @@ public class OpenSheet extends ApplicationFrame {
 			timeTest = 0;
 		}
 		timer = new Timer();
-		Map<String, String[]> allDataTest = convert(reader2.getAccelerationMeasurements());
-		draw = new Draw(reader2, timer, index, timeTest, isClean, allDataTest, startList);
-		long period = (long) ((1 / reader2.getFrequency() * 1000) / speed);
+
+		if (chartType.equals(AppText.ACC_CHART.value())) {
+			AccelerationDataAnalyzer a = new AccelerationDataAnalyzer();
+			List<Integer> startList = a.start(accReader.getAccelerationMeasurements());
+			Map<String, String[]> allDataTest = convertAcc(accReader.getAccelerationMeasurements());
+			draw = new Draw(accReader.getRowNumber(), timer, index, timeTest, isClean, allDataTest, startList);
+		} else {
+			EulerOrientationDataAnalyzer a = new EulerOrientationDataAnalyzer();
+			List<Integer> startList = a.analyze(eulerReader.getEulerOrientationMeasurement());
+			Map<String, String[]> allDataTest = convertEuler(eulerReader.getEulerOrientationMeasurement());
+			draw = new Draw(eulerReader.getRowNumber(), timer, index, timeTest, isClean, allDataTest, startList);
+
+		}
+
+		long period = (long) ((1 / frequency * 1000) / speed);
 		timer.schedule(draw, 0, period);
 	}
 
 	public void pauseDraw(String filePath) {
-		sleepTime = new Long(2000000000);
+		// sleepTime = new Long(2000000000);
 		// index = draw.getI();
 		// timeTest = draw.getTime();
 		// timer.cancel();
@@ -185,13 +236,14 @@ public class OpenSheet extends ApplicationFrame {
 	private class Draw extends TimerTask {
 		private int i = 0;
 		private double time = 0;
-		private FileReader2 reader = null;
+		private AccelerationFileReader reader = null;
 		private Map<String, String[]> allData = new HashMap<String, String[]>();
 		List<Integer> startList;
+		int rowNumber;
 
-		public Draw(FileReader2 reader, Timer timer, int index, double time, boolean isClean,
-				Map<String, String[]> allData, List<Integer> startList) {
-			this.reader = reader;
+		public Draw(int rowNumber, Timer timer, int index, double time, boolean isClean, Map<String, String[]> allData,
+				List<Integer> startList) {
+			this.rowNumber = rowNumber;
 			i = index;
 			this.time = time;
 			this.allData = allData;
@@ -203,7 +255,7 @@ public class OpenSheet extends ApplicationFrame {
 
 		public void run() {
 			try {
-				if ((reader.getRowNumber() - 1) != i) {
+				if ((rowNumber - 1) != i) {
 					graphs[0].add(time, new Double(allData.get(AppText.ACC_X_AXIS_IN_FILE.value())[i]));
 					graphs[1].add(time, new Double(allData.get(AppText.ACC_Y_AXIS_IN_FILE.value())[i]));
 					graphs[2].add(time, new Double(allData.get(AppText.ACC_Z_AXIS_IN_FILE.value())[i]));
@@ -213,7 +265,7 @@ public class OpenSheet extends ApplicationFrame {
 						m3.setPaint(Color.BLACK);
 						xylineChart.getXYPlot().addDomainMarker(m3);
 					}
-					time = time + 1 / reader.getFrequency();
+					time = time + 1 / frequency;
 					i++;
 				} else {
 					SettingPanel.setStartButton();

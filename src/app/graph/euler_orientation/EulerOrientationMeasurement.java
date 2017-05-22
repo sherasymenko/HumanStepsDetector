@@ -1,4 +1,4 @@
-package app.graph;
+package app.graph.euler_orientation;
 
 public class EulerOrientationMeasurement {
 

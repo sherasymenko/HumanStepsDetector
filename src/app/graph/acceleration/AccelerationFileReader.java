@@ -1,4 +1,4 @@
-package app.graph;
+package app.graph.acceleration;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -12,8 +12,8 @@ import java.util.stream.Stream;
 
 import app.main.AppText;
 
-public class FileReader2 {
-	private final Logger LOGGER = Logger.getLogger(FileReader.class.getName());
+public class AccelerationFileReader {
+	private final Logger LOGGER = Logger.getLogger(AccelerationFileReader.class.getName());
 	private List<AccelerationMeasurement> accelerationMeasurements = new ArrayList<AccelerationMeasurement>();
 	private int rowNumber = 0;
 	private double maxAccX;
@@ -31,7 +31,7 @@ public class FileReader2 {
 	private double frequency;
 	private double startTime;
 
-	public FileReader2(String filePath, double startTime, double frequency) throws IOException {
+	public AccelerationFileReader(String filePath, double startTime, double frequency) throws IOException {
 		super();
 		this.frequency = frequency;
 		try (Stream<String> stream = Files.lines(Paths.get(filePath))) {

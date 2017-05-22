@@ -1,4 +1,4 @@
-package app.graph;
+package app.graph.acceleration;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import app.graph.HumanStep;
 import app.main.AppText;
 
 public class AccelerationDataAnalyzer {
