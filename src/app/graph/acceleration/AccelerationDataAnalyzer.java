@@ -23,7 +23,7 @@ public class AccelerationDataAnalyzer {
 
 	}
 */
-	public double getMaxValue(Map data) {
+	/*public double getMaxValue(Map data) {
 		String[] graphs = { AppText.ACC_X_AXIS_IN_FILE.value(), AppText.ACC_Y_AXIS_IN_FILE.value(),
 				AppText.ACC_Z_AXIS_IN_FILE.value() };
 		String[] values = (String[]) data.get(graphs[0]);
@@ -124,7 +124,7 @@ public class AccelerationDataAnalyzer {
 		}
 
 		return startsOfSteps;
-	}
+	}*/
 
 	/*public List getStartTimeOfSteps(String[] packetCounter, Integer[] startsOfSteps) {
 		List times = new ArrayList();
