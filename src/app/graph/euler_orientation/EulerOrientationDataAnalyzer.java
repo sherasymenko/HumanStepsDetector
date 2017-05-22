@@ -23,15 +23,24 @@ public class EulerOrientationDataAnalyzer {
 	
 	Double previos = new Double(0);
 	Double maxValue = new Double(0);
-	Double init = new Double(0);
+	int maxValuePC = 0;
+	Double minValue = new Double(0);
+	int minValuePC = 0;
+	Double initRoll = new Double(0);
+	boolean start = true;
+	boolean startMax = true;
+	boolean islikeInit = true;
 	public List<Integer> analyze(List<EulerOrientationMeasurement> eulerOrientationMeasurement) {
 		List<Integer> list = new ArrayList<Integer>();
+		
 		List<EulerOrientationMeasurement> eulerMeasurement = new ArrayList<EulerOrientationMeasurement>();
 		eulerOrientationMeasurement.forEach(action -> {
 			eulerMeasurement.add(action);
-			System.out.println("test 1 " + action.getRoll());
+			///System.out.println("test 1 " + action.getRoll());
 		});
 
+		initRoll = eulerMeasurement.get(0).getRoll();
+		System.out.println("initRoll " + initRoll);
 		/*Comparator<EulerOrientationMeasurement> cmp = new Comparator<EulerOrientationMeasurement>() {
 			public int compare(EulerOrientationMeasurement o1, EulerOrientationMeasurement o2) {
 				return new Double(o2.getRoll()).compareTo(new Double(o1.getRoll()));
@@ -40,23 +49,60 @@ public class EulerOrientationDataAnalyzer {
 		eulerMeasurement.sort(cmp);*/
 		
 
-		eulerMeasurement.forEach(action -> {
+		/*eulerMeasurement.forEach(action -> {
 			if (!previos.equals(new Double(0))) {
 
-				if (init.compareTo(action.getRoll()) > 0) {
-					if (previos.compareTo(action.getRoll()) < 0) {
-						maxValue = action.getRoll();
-					}
+				if (init.compareTo(action.getRoll()+new Double(2)) > 0) {
+					list.add(maxValuePC);
 				}
+				if (previos.compareTo(action.getRoll()) < 0) {
+					maxValue = action.getRoll();
+					maxValuePC = action.getPacketCounter();
+				}
+				previos = action.getRoll();
 			} else {
 				init = action.getRoll();
 				previos = action.getRoll();
 			}
 
 			System.out.println("test 2 " + action.getRoll());
+		});*/
+
+		eulerMeasurement.forEach(action -> {
+			if (start) {
+				previos = action.getRoll();
+				start = false;
+			} else {
+				if (new Double(action.getRoll()).compareTo(initRoll + new Double(5)) > 0) {
+					if(startMax){
+						list.add(action.getPacketCounter());
+						startMax = false;
+					}
+					if (previos.compareTo(action.getRoll()) < 0) {
+						maxValue = action.getRoll();
+						maxValuePC = action.getPacketCounter();
+					}
+					previos = action.getRoll();
+					list.add(minValuePC);
+					islikeInit = true;
+				} else if (new Double(action.getRoll()).compareTo(initRoll - new Double(5)) < 0) {
+					startMax = true;
+					if (previos.compareTo(action.getRoll()) > 0) {
+						minValue = action.getRoll();
+						minValuePC = action.getPacketCounter();
+					}
+					previos = action.getRoll();
+					list.add(maxValuePC);
+					islikeInit = true;
+				} else {
+					if (islikeInit) {
+						list.add(action.getPacketCounter());
+						islikeInit = false;
+					}
+				}
+			}
 		});
 
-		list.add(31555);
 		return list;
 	}
 
