@@ -6,6 +6,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -266,28 +267,58 @@ public class SettingPanel extends JFrame {
 			public void actionPerformed(ActionEvent e) {
 				if (start.getText().equals("Start")) {
 					// accChart = Main.getSheet();
-					if (!selectedAccFilePath.getText().equals(""))
-						accChart.startDraw(selectedAccFilePath.getText(), false, getSpeed(radioList));
-					if (!selectedEulerFilePath.getText().equals(""))
-						eulerChart.startDraw(selectedEulerFilePath.getText(), false, getSpeed(radioList));
-					if (!selectedVideoPath.getText().equals(""))
+					if (!selectedAccFilePath.getText().equals("")) {
+						accChart.setEulerFilePath(selectedEulerFilePath.getText());
+						try {
+							accChart.startDraw(selectedAccFilePath.getText(), false, getSpeed(radioList));
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					if (!selectedEulerFilePath.getText().equals("")) {
+						try {
+							eulerChart.startDraw(selectedEulerFilePath.getText(), false, getSpeed(radioList));
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					if (!selectedVideoPath.getText().equals("")) {
 						player.startButton(selectedVideoPath.getText(), false, getSpeed(radioList));
+					}
 					start.setText("Pauza");
 				} else if (start.getText().equals("Pauza")) {
-					if (!selectedAccFilePath.getText().equals(""))
+					if (!selectedAccFilePath.getText().equals("")) {
 						player.pauseButton(selectedVideoPath.getText());
-					if (!selectedAccFilePath.getText().equals(""))
+					}
+					if (!selectedAccFilePath.getText().equals("")) {
 						accChart.pauseDraw(selectedAccFilePath.getText());
-					if (!selectedEulerFilePath.getText().equals(""))
+					}
+					if (!selectedEulerFilePath.getText().equals("")) {
 						eulerChart.pauseDraw(selectedEulerFilePath.getText());
+					}
 					start.setText("Start");
 				} else if (start.getText().equals("Reset")) {
-					if (!selectedAccFilePath.getText().equals(""))
-						accChart.startDraw(selectedAccFilePath.getText(), true, getSpeed(radioList));
-					if (!selectedEulerFilePath.getText().equals(""))
-						eulerChart.startDraw(selectedEulerFilePath.getText(), true, getSpeed(radioList));
-					if (!selectedAccFilePath.getText().equals(""))
+					if (!selectedAccFilePath.getText().equals("")) {
+						try {
+							accChart.startDraw(selectedAccFilePath.getText(), true, getSpeed(radioList));
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					if (!selectedEulerFilePath.getText().equals("")) {
+						try {
+							eulerChart.startDraw(selectedEulerFilePath.getText(), true, getSpeed(radioList));
+						} catch (IOException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+					}
+					if (!selectedAccFilePath.getText().equals("")) {
 						player.startButton(selectedVideoPath.getText(), true, getSpeed(radioList));
+					}
 					start.setText("Pauza");
 				}
 

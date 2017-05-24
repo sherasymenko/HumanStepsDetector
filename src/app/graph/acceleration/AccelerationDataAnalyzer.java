@@ -224,13 +224,13 @@ public class AccelerationDataAnalyzer {
 			} else {
 				stepStartId.add(a.getStartIntervalPacketCounter());
 			}
-			System.out.println(a.getIntervalCount());
+			//System.out.println(a.getIntervalCount());
 			previosValue = new Integer(a.getIntervalCount());
 			f++;
 		});
 
 		stepStartId.forEach(a -> {
-			System.out.println(a);
+			//System.out.println(a);
 		});
 
 		return stepStartId;
