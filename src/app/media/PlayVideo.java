@@ -1,6 +1,9 @@
 package app.media;
 
+import java.awt.Frame;
+
 import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.WindowConstants;
 
 import javafx.embed.swing.JFXPanel;
@@ -19,6 +22,8 @@ public class PlayVideo {
 		frame.setBounds(200, 100, 800, 600);
 		frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 		frame.setVisible(true);
+		//Frame frame = (Frame) SwingUtilities.getRoot(content);
+		frame.setName("video");
 	}
 
 	public void startButton(String videoPath, boolean toClean, double speed) {
@@ -41,6 +46,11 @@ public class PlayVideo {
 		frame.setVisible(true);
 		frame.revalidate();
 		frame.repaint();
+		for (int i = 0; i < JFrame.getFrames().length; i++) {
+			if (JFrame.getFrames()[i].getName().equals("video")) {
+				JFrame.getFrames()[i].dispose();
+			}
+		}
 	}
 
 	public void selectVideo(String videoPath) throws MediaException {

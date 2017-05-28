@@ -170,7 +170,13 @@ public class SettingPanel extends JFrame {
 				fileChooser.setCurrentDirectory(new File(System.getProperty("user.home")));
 				int result = fileChooser.showOpenDialog(newPanel);
 				if (result == JFileChooser.APPROVE_OPTION) {
-					Main.openMediaPlayerGUI();
+					player = new PlayVideo();
+					SwingUtilities.invokeLater(new Runnable() {
+						@Override
+						public void run() {
+							player.initAndShowGUI();
+						}
+					});
 					File selectedVideo = fileChooser.getSelectedFile();
 					selectedVideoPath.setText(selectedVideo.getAbsolutePath());
 					SwingUtilities.invokeLater(new Runnable() {
@@ -289,7 +295,7 @@ public class SettingPanel extends JFrame {
 					}
 					start.setText("Pauza");
 				} else if (start.getText().equals("Pauza")) {
-					if (!selectedAccFilePath.getText().equals("")) {
+					if (!selectedVideoPath.getText().equals("")) {
 						player.pauseButton(selectedVideoPath.getText());
 					}
 					if (!selectedAccFilePath.getText().equals("")) {
@@ -299,7 +305,7 @@ public class SettingPanel extends JFrame {
 						eulerChart.pauseDraw(selectedEulerFilePath.getText());
 					}
 					start.setText("Start");
-				} else if (start.getText().equals("Reset")) {
+				} else if (start.getText().equals("Restart")) {
 					if (!selectedAccFilePath.getText().equals("")) {
 						try {
 							accChart.startDraw(selectedAccFilePath.getText(), true, getSpeed(radioList));
@@ -316,7 +322,7 @@ public class SettingPanel extends JFrame {
 							e1.printStackTrace();
 						}
 					}
-					if (!selectedAccFilePath.getText().equals("")) {
+					if (!selectedVideoPath.getText().equals("")) {
 						player.startButton(selectedVideoPath.getText(), true, getSpeed(radioList));
 					}
 					start.setText("Pauza");
@@ -325,7 +331,7 @@ public class SettingPanel extends JFrame {
 				selectAccFile.setEnabled(false);
 				selectEulerFile.setEnabled(false);
 				selectVideo.setEnabled(false);
-				start.setEnabled(false);
+				//start.setEnabled(false);
 			}
 		});
 		resetSetting.addActionListener(new ActionListener() {
@@ -374,8 +380,8 @@ public class SettingPanel extends JFrame {
 		line2.add(selectedAccFilePath);
 		line3.add(selectEulerFile);
 		line3.add(selectedEulerFilePath);
-		// line4.add(selectVideo);
-		// line4.add(selectedVideoPath);
+		 line4.add(selectVideo);
+		 line4.add(selectedVideoPath);
 		line5.add(speedLabel);
 		line5.add(speed1);
 		line5.add(speed2);
@@ -404,7 +410,7 @@ public class SettingPanel extends JFrame {
 	}
 
 	public static void setStartButton() {
-		start.setText("Start");
+		start.setText("Restart");
 	}
 
 	public double getSpeed(List<JRadioButton> radio) {

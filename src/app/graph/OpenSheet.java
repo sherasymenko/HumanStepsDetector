@@ -55,7 +55,7 @@ public class OpenSheet extends ApplicationFrame {
 	private Double frequency;
 	private String chartType;
 	private String eulerFilePath;
-
+public boolean toClean = false;
 	public OpenSheet(String filePath, String chartType, Double frequency) {
 		super(AppText.APPLICATION_TITLE.value());
 		this.frequency = frequency;
@@ -196,11 +196,13 @@ public class OpenSheet extends ApplicationFrame {
 
 	}
 
-	public void startDraw(String filePath, boolean toClean, double speed) throws IOException {
+	public void startDraw(String filePath, boolean toCleantest, double speed) throws IOException {
 		if (toClean) {
+			SettingPanel.setStartButton();
 			for (int i = 0; i < graphs.length; i++) {
 				graphs[i].clear();
 			}
+			xylineChart.getXYPlot().clearDomainMarkers();
 			index = 0;
 			timeTest = 0;
 		}
@@ -212,15 +214,18 @@ public class OpenSheet extends ApplicationFrame {
 			List<Integer> list = a.getList();
 			List<Integer> maxList = a.getMaxList();
 			List<Integer> minList = a.getMinList();
+			List<Double> iList = a.getPointTime(eulerReader.getEulerOrientationMeasurement(), list, frequency);
+			//iList.forEach(action -> System.out.println("!!!!! " + action));
 			Map<String, String[]> allDataTest = convertAcc(accReader.getAccelerationMeasurements());
-			draw = new Draw(accReader.getRowNumber(), timer, index, timeTest, isClean, allDataTest, list, maxList, minList);
+			draw = new Draw(accReader.getRowNumber(), timer, index, timeTest, isClean, allDataTest, list, maxList, minList, iList);
 		} else {
 			EulerOrientationDataAnalyzer a = new EulerOrientationDataAnalyzer(eulerReader.getEulerOrientationMeasurement());
 			List<Integer> list = a.getList();
 			List<Integer> maxList = a.getMaxList();
 			List<Integer> minList = a.getMinList();
+			List<Double> iList = a.getPointTime(eulerReader.getEulerOrientationMeasurement(), list, frequency);
 			Map<String, String[]> allDataTest = convertEuler(eulerReader.getEulerOrientationMeasurement());
-			draw = new Draw(eulerReader.getRowNumber(), timer, index, timeTest, isClean, allDataTest, list, maxList, minList);
+			draw = new Draw(eulerReader.getRowNumber(), timer, index, timeTest, isClean, allDataTest, list, maxList, minList, iList);
 
 		}
 
@@ -229,10 +234,15 @@ public class OpenSheet extends ApplicationFrame {
 	}
 
 	public void pauseDraw(String filePath) {
-		// sleepTime = new Long(2000000000);
-		// index = draw.getI();
-		// timeTest = draw.getTime();
-		// timer.cancel();
+		Long sleepTime = new Long(2000000000);
+		index = draw.getI();
+		timeTest = draw.getTime();
+		 timer.cancel();
+	}
+	
+	public void restartDraw(){
+		
+		
 	}
 
 	private XYDataset createDataset() {
@@ -259,9 +269,9 @@ public class OpenSheet extends ApplicationFrame {
 		List<Integer> maxList;
 		List<Integer> minList;
 		int rowNumber;
-
+		List<Double> iList;
 		public Draw(int rowNumber, Timer timer, int index, double time, boolean isClean, Map<String, String[]> allData,
-				List<Integer> list, List<Integer> maxList, List<Integer> minList) {
+				List<Integer> list, List<Integer> maxList, List<Integer> minList,	List<Double> iList) {
 			this.rowNumber = rowNumber;
 			i = index;
 			this.time = time;
@@ -269,17 +279,43 @@ public class OpenSheet extends ApplicationFrame {
 			this.list = list;
 			this.maxList = maxList;
 			this.minList = minList;
+			this.iList = iList;
 		}
 
 		public Draw() {
 		}
 
+		public int getI() {
+			return i;
+		}
+
+		public void setI(int i) {
+			this.i = i;
+		}
+
+		public double getTime() {
+			return time;
+		}
+
+		public void setTime(double time) {
+			this.time = time;
+		}
+
 		public void run() {
 			try {
 				if ((rowNumber - 1) != i) {
+					toClean = false;
 					graphs[0].add(time, new Double(allData.get(AppText.ACC_X_AXIS_IN_FILE.value())[i]));
 					graphs[1].add(time, new Double(allData.get(AppText.ACC_Y_AXIS_IN_FILE.value())[i]));
 					graphs[2].add(time, new Double(allData.get(AppText.ACC_Z_AXIS_IN_FILE.value())[i]));
+
+					/*if (iList.contains(time)) {
+						//System.out.println("!!!!!!!!!!!!!!!!!!!testtest");
+						Marker m3 = new ValueMarker(time, Color.BLACK, new BasicStroke(3f));
+						//m3.setPaint(Color.BLACK);
+						xylineChart.getXYPlot().addDomainMarker(m3);
+					} */
+					
 					if (minList.contains(new Integer(allData.get(AppText.PACKET_COUNTER.value())[i]))) {
 						//System.out.println("!!!!!!!!!!!!!!!!!!!testtest");
 						Marker m3 = new ValueMarker(time, Color.BLACK, new BasicStroke(3f));
@@ -302,6 +338,7 @@ public class OpenSheet extends ApplicationFrame {
 					i++;
 				} else {
 					SettingPanel.setStartButton();
+					toClean = true;
 					timer.cancel();
 				}
 			} catch (NumberFormatException e) {
