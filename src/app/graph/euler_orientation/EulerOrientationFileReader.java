@@ -87,62 +87,6 @@ public class EulerOrientationFileReader {
 		this.rowNumber = rowNumber;
 	}
 
-	public double getMaxEulerX() {
-		return maxEulerX;
-	}
-
-	public void setMaxEulerX(double maxEulerX) {
-		this.maxEulerX = maxEulerX;
-	}
-
-	public double getMaxEulerY() {
-		return maxEulerY;
-	}
-
-	public void setMaxEulerY(double maxEulerY) {
-		this.maxEulerY = maxEulerY;
-	}
-
-	public double getMaxEulerZ() {
-		return maxEulerZ;
-	}
-
-	public void setMaxEulerZ(double maxEulerZ) {
-		this.maxEulerZ = maxEulerZ;
-	}
-
-	public double getMinEulerX() {
-		return minEulerX;
-	}
-
-	public void setMinEulerX(double minEulerX) {
-		this.minEulerX = minEulerX;
-	}
-
-	public double getMinEulerY() {
-		return minEulerY;
-	}
-
-	public void setMinEulerY(double minEulerY) {
-		this.minEulerY = minEulerY;
-	}
-
-	public double getMinEulerZ() {
-		return minEulerZ;
-	}
-
-	public void setMinEulerZ(double minEulerZ) {
-		this.minEulerZ = minEulerZ;
-	}
-
-	public double getFrequency() {
-		return frequency;
-	}
-
-	public void setFrequency(double frequency) {
-		this.frequency = frequency;
-	}
-
 	public double getMaxX() {
 		return maxX;
 	}

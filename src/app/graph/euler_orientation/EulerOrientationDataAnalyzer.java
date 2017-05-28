@@ -54,103 +54,84 @@ public class EulerOrientationDataAnalyzer {
 			eulerMeasurement.add(action);
 		});
 		initRoll = eulerMeasurement.get(0).getRoll();
-		// System.out.println("!!! size " + eulerMeasurement.size());
 		eulerMeasurement.forEach(action -> {
 			if (start) {
 				previos = action.getRoll();
 				start = false;
 			} else {
-				
-				
-				
-				
-				
-				if(isChartTypeMinus(eulerOrientationMeasurement)){
-				
-				
-				if (new Double(action.getRoll()).compareTo(initRoll - new Double(5)) < 0) {
-					if (startMax) {
-						addToList(list, action.getPacketCounter());
-						startMax = false;
-					}
-					if (previos.compareTo(action.getRoll()) > 0) {
-						maxValue = action.getRoll();
-						maxValuePC = action.getPacketCounter();
-					}
-					previos = action.getRoll();
-					addToList(minList, minValuePC);
-					islikeInit = true;
-				} else if (new Double(action.getRoll()).compareTo(initRoll + new Double(5)) > 0) {
-					startMax = true;
-					if (previos.compareTo(action.getRoll()) < 0) {
-						minValue = action.getRoll();
-						minValuePC = action.getPacketCounter();
-					}
-					previos = action.getRoll();
-					addToList(maxList, maxValuePC);
-					// System.out.println("!!!!! " + maxValuePC);
-					islikeInit = true;
-				} else {
-					addToList(maxList, maxValuePC);
-					addToList(minList, minValuePC);
-					if (islikeInit) {
-						if (!start)
+				if (isChartTypeMinus(eulerOrientationMeasurement)) {
+					if (new Double(action.getRoll()).compareTo(initRoll - new Double(5)) < 0) {
+						if (startMax) {
 							addToList(list, action.getPacketCounter());
-						islikeInit = false;
-					}
-					previos = action.getRoll();
-				}
-				
-				}else {
-					
-						if (new Double(action.getRoll()).compareTo(initRoll + new Double(5)) > 0) {
-							if (startMax) {
-								addToList(list, action.getPacketCounter());
-								startMax = false;
-							}
-							if (previos.compareTo(action.getRoll()) < 0) {
-								maxValue = action.getRoll();
-								maxValuePC = action.getPacketCounter();
-							}
-							previos = action.getRoll();
-							addToList(minList, minValuePC);
-							islikeInit = true;
-						} else if (new Double(action.getRoll()).compareTo(initRoll - new Double(5)) < 0) {
-							startMax = true;
-							if (previos.compareTo(action.getRoll()) > 0) {
-								minValue = action.getRoll();
-								minValuePC = action.getPacketCounter();
-							}
-							previos = action.getRoll();
-							addToList(maxList, maxValuePC);
-							// System.out.println("!!!!! " + maxValuePC);
-							islikeInit = true;
-						} else {
-							addToList(maxList, maxValuePC);
-							addToList(minList, minValuePC);
-							if (islikeInit) {
-								if (!start)
-									addToList(list, action.getPacketCounter());
-								islikeInit = false;
-							}
-							previos = action.getRoll();
+							startMax = false;
 						}
-				
-				
-				
+						if (previos.compareTo(action.getRoll()) > 0) {
+							maxValue = action.getRoll();
+							maxValuePC = action.getPacketCounter();
+						}
+						previos = action.getRoll();
+						addToList(minList, minValuePC);
+						islikeInit = true;
+					} else if (new Double(action.getRoll()).compareTo(initRoll + new Double(5)) > 0) {
+						startMax = true;
+						if (previos.compareTo(action.getRoll()) < 0) {
+							minValue = action.getRoll();
+							minValuePC = action.getPacketCounter();
+						}
+						previos = action.getRoll();
+						addToList(maxList, maxValuePC);
+						islikeInit = true;
+					} else {
+						addToList(maxList, maxValuePC);
+						addToList(minList, minValuePC);
+						if (islikeInit) {
+							if (!start)
+								addToList(list, action.getPacketCounter());
+							islikeInit = false;
+						}
+						previos = action.getRoll();
+					}
+
+				} else {
+
+					if (new Double(action.getRoll()).compareTo(initRoll + new Double(5)) > 0) {
+						if (startMax) {
+							addToList(list, action.getPacketCounter());
+							startMax = false;
+						}
+						if (previos.compareTo(action.getRoll()) < 0) {
+							maxValue = action.getRoll();
+							maxValuePC = action.getPacketCounter();
+						}
+						previos = action.getRoll();
+						addToList(minList, minValuePC);
+						islikeInit = true;
+					} else if (new Double(action.getRoll()).compareTo(initRoll - new Double(5)) < 0) {
+						startMax = true;
+						if (previos.compareTo(action.getRoll()) > 0) {
+							minValue = action.getRoll();
+							minValuePC = action.getPacketCounter();
+						}
+						previos = action.getRoll();
+						addToList(maxList, maxValuePC);
+						islikeInit = true;
+					} else {
+						addToList(maxList, maxValuePC);
+						addToList(minList, minValuePC);
+						if (islikeInit) {
+							if (!start)
+								addToList(list, action.getPacketCounter());
+							islikeInit = false;
+						}
+						previos = action.getRoll();
+					}
+
 				}
-				
-				
-				
+
 			}
 			iterator++;
 		});
 		isChartTypeMinus(eulerOrientationMeasurement);
-		/*
-		 * list.forEach(a -> System.out.println("list " + a));
-		 * iteratorList.forEach(b -> System.out.println("iteratorList " + b));
-		 */
-
 		getPointTime(eulerOrientationMeasurement, list, new Double(75));
 	}
 
@@ -164,7 +145,6 @@ public class EulerOrientationDataAnalyzer {
 				list.add(time);
 			}
 		});
-		//list.forEach(a -> System.out.println("list " + a));
 		return list;
 	}
 

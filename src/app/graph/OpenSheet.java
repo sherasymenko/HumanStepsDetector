@@ -26,7 +26,6 @@ import org.jfree.data.xy.XYSeries;
 import org.jfree.data.xy.XYSeriesCollection;
 import org.jfree.ui.ApplicationFrame;
 
-import app.graph.acceleration.AccelerationDataAnalyzer;
 import app.graph.acceleration.AccelerationFileReader;
 import app.graph.acceleration.AccelerationMeasurement;
 import app.graph.euler_orientation.EulerOrientationDataAnalyzer;
@@ -50,13 +49,13 @@ public class OpenSheet extends ApplicationFrame {
 	private int index = 0;
 	private double timeTest = 0;
 	private boolean isClean = false;
-	// private long sleepTime;
 	private int i = 0;
 	private Double frequency;
 	private String chartType;
 	private String eulerFilePath;
-public boolean toClean = false;
-	public OpenSheet(String filePath, String chartType, Double frequency) {
+	public boolean toClean = false;
+
+	public OpenSheet(String filePath, String chartType, Double frequency) throws Exception {
 		super(AppText.APPLICATION_TITLE.value());
 		this.frequency = frequency;
 		this.chartType = chartType;
@@ -69,7 +68,6 @@ public boolean toClean = false;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		// sleepTime = (long) (1 / reader2.getFrequency() * 1000);
 		graphs = new XYSeries[3];
 		if (chartType.equals(AppText.ACC_CHART.value())) {
 			graphs[0] = new XYSeries(AppText.ACC_X.value());
@@ -119,16 +117,13 @@ public boolean toClean = false;
 		frame.setName(chartType);
 	}
 
-	
 	public String getEulerFilePath() {
 		return eulerFilePath;
 	}
 
-
 	public void setEulerFilePath(String eulerFilePath) {
 		this.eulerFilePath = eulerFilePath;
 	}
-
 
 	public void resetChart(String chartType) {
 		content.removeAll();
@@ -198,7 +193,7 @@ public boolean toClean = false;
 
 	public void startDraw(String filePath, boolean toCleantest, double speed) throws IOException {
 		if (toClean) {
-			SettingPanel.setStartButton();
+			SettingPanel.setRestartButton();
 			for (int i = 0; i < graphs.length; i++) {
 				graphs[i].clear();
 			}
@@ -210,22 +205,25 @@ public boolean toClean = false;
 
 		if (chartType.equals(AppText.ACC_CHART.value())) {
 			eulerReader = new EulerOrientationFileReader(eulerFilePath, new Double(0), frequency);
-			EulerOrientationDataAnalyzer a = new EulerOrientationDataAnalyzer(eulerReader.getEulerOrientationMeasurement());
+			EulerOrientationDataAnalyzer a = new EulerOrientationDataAnalyzer(
+					eulerReader.getEulerOrientationMeasurement());
 			List<Integer> list = a.getList();
 			List<Integer> maxList = a.getMaxList();
 			List<Integer> minList = a.getMinList();
 			List<Double> iList = a.getPointTime(eulerReader.getEulerOrientationMeasurement(), list, frequency);
-			//iList.forEach(action -> System.out.println("!!!!! " + action));
 			Map<String, String[]> allDataTest = convertAcc(accReader.getAccelerationMeasurements());
-			draw = new Draw(accReader.getRowNumber(), timer, index, timeTest, isClean, allDataTest, list, maxList, minList, iList);
+			draw = new Draw(accReader.getRowNumber(), timer, index, timeTest, isClean, allDataTest, list, maxList,
+					minList, iList);
 		} else {
-			EulerOrientationDataAnalyzer a = new EulerOrientationDataAnalyzer(eulerReader.getEulerOrientationMeasurement());
+			EulerOrientationDataAnalyzer a = new EulerOrientationDataAnalyzer(
+					eulerReader.getEulerOrientationMeasurement());
 			List<Integer> list = a.getList();
 			List<Integer> maxList = a.getMaxList();
 			List<Integer> minList = a.getMinList();
 			List<Double> iList = a.getPointTime(eulerReader.getEulerOrientationMeasurement(), list, frequency);
 			Map<String, String[]> allDataTest = convertEuler(eulerReader.getEulerOrientationMeasurement());
-			draw = new Draw(eulerReader.getRowNumber(), timer, index, timeTest, isClean, allDataTest, list, maxList, minList, iList);
+			draw = new Draw(eulerReader.getRowNumber(), timer, index, timeTest, isClean, allDataTest, list, maxList,
+					minList, iList);
 
 		}
 
@@ -234,15 +232,13 @@ public boolean toClean = false;
 	}
 
 	public void pauseDraw(String filePath) {
-		Long sleepTime = new Long(2000000000);
 		index = draw.getI();
 		timeTest = draw.getTime();
-		 timer.cancel();
+		timer.cancel();
 	}
-	
-	public void restartDraw(){
-		
-		
+
+	public void restartDraw() {
+
 	}
 
 	private XYDataset createDataset() {
@@ -263,15 +259,14 @@ public boolean toClean = false;
 	private class Draw extends TimerTask {
 		private int i = 0;
 		private double time = 0;
-		private AccelerationFileReader reader = null;
 		private Map<String, String[]> allData = new HashMap<String, String[]>();
 		List<Integer> list;
 		List<Integer> maxList;
 		List<Integer> minList;
 		int rowNumber;
-		List<Double> iList;
+
 		public Draw(int rowNumber, Timer timer, int index, double time, boolean isClean, Map<String, String[]> allData,
-				List<Integer> list, List<Integer> maxList, List<Integer> minList,	List<Double> iList) {
+				List<Integer> list, List<Integer> maxList, List<Integer> minList, List<Double> iList) {
 			this.rowNumber = rowNumber;
 			i = index;
 			this.time = time;
@@ -279,7 +274,6 @@ public boolean toClean = false;
 			this.list = list;
 			this.maxList = maxList;
 			this.minList = minList;
-			this.iList = iList;
 		}
 
 		public Draw() {
@@ -289,16 +283,8 @@ public boolean toClean = false;
 			return i;
 		}
 
-		public void setI(int i) {
-			this.i = i;
-		}
-
 		public double getTime() {
 			return time;
-		}
-
-		public void setTime(double time) {
-			this.time = time;
 		}
 
 		public void run() {
@@ -309,35 +295,22 @@ public boolean toClean = false;
 					graphs[1].add(time, new Double(allData.get(AppText.ACC_Y_AXIS_IN_FILE.value())[i]));
 					graphs[2].add(time, new Double(allData.get(AppText.ACC_Z_AXIS_IN_FILE.value())[i]));
 
-					/*if (iList.contains(time)) {
-						//System.out.println("!!!!!!!!!!!!!!!!!!!testtest");
-						Marker m3 = new ValueMarker(time, Color.BLACK, new BasicStroke(3f));
-						//m3.setPaint(Color.BLACK);
-						xylineChart.getXYPlot().addDomainMarker(m3);
-					} */
-					
 					if (minList.contains(new Integer(allData.get(AppText.PACKET_COUNTER.value())[i]))) {
-						//System.out.println("!!!!!!!!!!!!!!!!!!!testtest");
-						Marker m3 = new ValueMarker(time, Color.BLACK, new BasicStroke(3f));
-						//m3.setPaint(Color.BLACK);
-						xylineChart.getXYPlot().addDomainMarker(m3);
-					} 
+						Marker m = new ValueMarker(time, Color.BLACK, new BasicStroke(3f));
+						xylineChart.getXYPlot().addDomainMarker(m);
+					}
 					if (maxList.contains(new Integer(allData.get(AppText.PACKET_COUNTER.value())[i]))) {
-						//System.out.println("!!!!!!!!!!!!!!!!!!!testtest");
-						Marker m3 = new ValueMarker(time, Color.DARK_GRAY, new BasicStroke(2f));
-						//m3.setPaint(Color.BLACK);
-						xylineChart.getXYPlot().addDomainMarker(m3);
+						Marker m = new ValueMarker(time, Color.DARK_GRAY, new BasicStroke(2f));
+						xylineChart.getXYPlot().addDomainMarker(m);
 					}
 					if (list.contains(new Integer(allData.get(AppText.PACKET_COUNTER.value())[i]))) {
-						//System.out.println("!!!!!!!!!!!!!!!!!!!testtest");
-						Marker m3 = new ValueMarker(time, Color.GRAY, new BasicStroke(2f));
-						//m3.setPaint(Color.BLACK);
-						xylineChart.getXYPlot().addDomainMarker(m3);
+						Marker m = new ValueMarker(time, Color.GRAY, new BasicStroke(2f));
+						xylineChart.getXYPlot().addDomainMarker(m);
 					}
 					time = time + 1 / frequency;
 					i++;
 				} else {
-					SettingPanel.setStartButton();
+					SettingPanel.setRestartButton();
 					toClean = true;
 					timer.cancel();
 				}

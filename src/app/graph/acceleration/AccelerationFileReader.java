@@ -1,6 +1,5 @@
 package app.graph.acceleration;
 
-import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -31,45 +30,43 @@ public class AccelerationFileReader {
 	private double frequency;
 	private double startTime;
 
-	public AccelerationFileReader(String filePath, double startTime, double frequency) throws IOException {
+	public AccelerationFileReader(String filePath, double startTime, double frequency) throws Exception {
 		super();
 		this.frequency = frequency;
-		try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
-			stream.forEach(e -> {
-				if (!e.contains(AppText.PACKET_COUNTER.value())) {
-					String rowData[] = e.split(";");
-					accelerationMeasurements.add(new AccelerationMeasurement(new Integer(rowData[0]),
-							new Double(rowData[1]), new Double(rowData[2]), new Double(rowData[3])));
-					rowNumber++;
-				}
-			});
-			this.maxAccX = accelerationMeasurements.stream().max((m1, m2) -> {
-				return Double.compare(m1.getAccelerationX(), m2.getAccelerationX());
-			}).get().getAccelerationX();
+		Stream<String> stream = Files.lines(Paths.get(filePath));
+		stream.forEach(e -> {
+			if (!e.contains(AppText.PACKET_COUNTER.value())) {
+				String rowData[] = e.split(";");
+				accelerationMeasurements.add(new AccelerationMeasurement(new Integer(rowData[0]),
+						new Double(rowData[1]), new Double(rowData[2]), new Double(rowData[3])));
+				rowNumber++;
+			}
+		});
+		stream.close();
+		this.maxAccX = accelerationMeasurements.stream().max((m1, m2) -> {
+			return Double.compare(m1.getAccelerationX(), m2.getAccelerationX());
+		}).get().getAccelerationX();
 
-			this.maxAccY = accelerationMeasurements.stream().max((m1, m2) -> {
-				return Double.compare(m1.getAccelerationY(), m2.getAccelerationY());
-			}).get().getAccelerationY();
+		this.maxAccY = accelerationMeasurements.stream().max((m1, m2) -> {
+			return Double.compare(m1.getAccelerationY(), m2.getAccelerationY());
+		}).get().getAccelerationY();
 
-			this.maxAccZ = accelerationMeasurements.stream().max((m1, m2) -> {
-				return Double.compare(m1.getAccelerationZ(), m2.getAccelerationZ());
-			}).get().getAccelerationZ();
+		this.maxAccZ = accelerationMeasurements.stream().max((m1, m2) -> {
+			return Double.compare(m1.getAccelerationZ(), m2.getAccelerationZ());
+		}).get().getAccelerationZ();
 
-			this.minAccX = accelerationMeasurements.stream().min((m1, m2) -> {
-				return Double.compare(m1.getAccelerationX(), m2.getAccelerationX());
-			}).get().getAccelerationX();
+		this.minAccX = accelerationMeasurements.stream().min((m1, m2) -> {
+			return Double.compare(m1.getAccelerationX(), m2.getAccelerationX());
+		}).get().getAccelerationX();
 
-			this.minAccY = accelerationMeasurements.stream().min((m1, m2) -> {
-				return Double.compare(m1.getAccelerationY(), m2.getAccelerationY());
-			}).get().getAccelerationY();
+		this.minAccY = accelerationMeasurements.stream().min((m1, m2) -> {
+			return Double.compare(m1.getAccelerationY(), m2.getAccelerationY());
+		}).get().getAccelerationY();
 
-			this.minAccZ = accelerationMeasurements.stream().min((m1, m2) -> {
-				return Double.compare(m1.getAccelerationZ(), m2.getAccelerationZ());
-			}).get().getAccelerationZ();
+		this.minAccZ = accelerationMeasurements.stream().min((m1, m2) -> {
+			return Double.compare(m1.getAccelerationZ(), m2.getAccelerationZ());
+		}).get().getAccelerationZ();
 
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 		this.startTime = startTime;
 		this.maxX = 1 / frequency * rowNumber;
 		this.minX = new Double(0);
@@ -91,54 +88,6 @@ public class AccelerationFileReader {
 
 	public void setRowNumber(int rowNumber) {
 		this.rowNumber = rowNumber;
-	}
-
-	public double getMaxAccX() {
-		return maxAccX;
-	}
-
-	public void setMaxAccX(double maxAccX) {
-		this.maxAccX = maxAccX;
-	}
-
-	public double getMaxAccY() {
-		return maxAccY;
-	}
-
-	public void setMaxAccY(double maxAccY) {
-		this.maxAccY = maxAccY;
-	}
-
-	public double getMaxAccZ() {
-		return maxAccZ;
-	}
-
-	public void setMaxAccZ(double maxAccZ) {
-		this.maxAccZ = maxAccZ;
-	}
-
-	public double getMinAccX() {
-		return minAccX;
-	}
-
-	public void setMinAccX(double minAccX) {
-		this.minAccX = minAccX;
-	}
-
-	public double getMinAccY() {
-		return minAccY;
-	}
-
-	public void setMinAccY(double minAccY) {
-		this.minAccY = minAccY;
-	}
-
-	public double getMinAccZ() {
-		return minAccZ;
-	}
-
-	public void setMinAccZ(double minAccZ) {
-		this.minAccZ = minAccZ;
 	}
 
 	public double getMaxX() {
@@ -173,39 +122,4 @@ public class AccelerationFileReader {
 		this.minY = minY;
 	}
 
-	public int getHeaderLineIndex() {
-		return headerLineIndex;
-	}
-
-	public void setHeaderLineIndex(int headerLineIndex) {
-		this.headerLineIndex = headerLineIndex;
-	}
-
-	public Map<String, String[]> getAllData() {
-		return allData;
-	}
-
-	public void setAllData(Map<String, String[]> allData) {
-		this.allData = allData;
-	}
-
-	public double getFrequency() {
-		return frequency;
-	}
-
-	public void setFrequency(double frequency) {
-		this.frequency = frequency;
-	}
-
-	public double getStartTime() {
-		return startTime;
-	}
-
-	public void setStartTime(double startTime) {
-		this.startTime = startTime;
-	}
-
-	public Logger getLOGGER() {
-		return LOGGER;
-	}
 }

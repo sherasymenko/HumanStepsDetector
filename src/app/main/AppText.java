@@ -21,7 +21,8 @@ public enum AppText {
 	ACC_Z_AXIS_IN_FILE("Acc_Z"),
 	EULER_X_AXIS_IN_FILE("Roll"),
 	EULER_Y_AXIS_IN_FILE("Pitch"),
-	EULER_Z_AXIS_IN_FILE("Yaw");
+	EULER_Z_AXIS_IN_FILE("Yaw"),
+	INFO_TEXT("1. sdfsdfsfsdfsdf \n 2. sdfs s sdf  sdf \n 3. sfdsfs f sfg sd ");
 	
 	AppText(String value) {
 		this.value = value;
