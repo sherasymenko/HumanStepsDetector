@@ -1,7 +1,6 @@
 package app.main;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -79,7 +78,9 @@ public class SettingPanel extends JFrame {
 
 		showInfo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				System.out.println(AppText.INFO_TEXT.value());
 				JOptionPane.showMessageDialog(null, AppText.INFO_TEXT.value(), "", 1);
+				System.out.println(AppText.INFO_TEXT.value());
 			}
 		});
 
@@ -343,6 +344,7 @@ public class SettingPanel extends JFrame {
 				speed4.setEnabled(true);
 				frequency.setText("75");
 				frequency.setEditable(true);
+				start.setText("Start");
 				start.setEnabled(false);
 			}
 		});
