@@ -1,6 +1,7 @@
 package app.main;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
@@ -34,13 +35,14 @@ import javafx.scene.media.MediaException;
 
 @SuppressWarnings("serial")
 public class SettingPanel extends JFrame {
+	private JLabel errorMessageLine = new JLabel(" ");
 	private JLabel errorMessage = new JLabel("");
 	private JButton showInfo = new JButton("Instrukcja");
-	private JButton selectAccFile = new JButton("Wybierz plik przyspieszenia...");
+	private JButton selectAccFile = new JButton("Plik z danymi przyspieszenia");
 	private JTextField selectedAccFilePath = new JTextField("", 50);
-	private JButton selectEulerFile = new JButton("Wybierz plik k¹tów Eulera...");
+	private JButton selectEulerFile = new JButton("Plik z danymi k¹tów Eulera");
 	private JTextField selectedEulerFilePath = new JTextField("", 50);
-	private JButton selectVideo = new JButton("Wybierz nagranie...");
+	private JButton selectVideo = new JButton("Nagranie");
 	private JTextField selectedVideoPath = new JTextField("", 50);
 	private JLabel speedLabel = new JLabel("Szybkoœæ");
 	private JRadioButton speed1 = new JRadioButton("0.1");
@@ -355,6 +357,7 @@ public class SettingPanel extends JFrame {
 		speed3.setName("0.5");
 		speed4.setName("1");
 		speed4.setSelected(true);
+		line1.add(errorMessageLine);
 		line1.add(errorMessage);
 		line2.add(selectAccFile);
 		line2.add(selectedAccFilePath);
@@ -382,7 +385,7 @@ public class SettingPanel extends JFrame {
 	}
 
 	private void panelSetting() {
-		setSize(600, 700);
+		setSize(600, 1000);
 		setVisible(true);
 		newPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Ustawienia"));
 		add(newPanel);
