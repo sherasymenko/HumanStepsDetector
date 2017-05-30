@@ -20,18 +20,16 @@ public class EulerOrientationFileReader {
 	private double minEulerX;
 	private double minEulerY;
 	private double minEulerZ;
-	private double frequency;
 	private double maxX;
 	private double maxY;
 	private double minX;
 	private double minY;
 
-	public EulerOrientationFileReader(String filePath, double startTime, double frequency) throws IOException {
+	public EulerOrientationFileReader(String filePath, double frequency) throws IOException {
 		super();
-		this.frequency = frequency;
 		try (Stream<String> stream = Files.lines(Paths.get(filePath))) {
 			stream.forEach(e -> {
-				if (!e.contains(AppText.PACKET_COUNTER.value())) {
+				if (!e.contains(AppText.PACKET_COUNTER.get())) {
 					String rowData[] = e.split(";");
 					eulerOrientationMeasurement.add(new EulerOrientationMeasurement(new Integer(rowData[0]),
 							new Double(rowData[1]), new Double(rowData[2]), new Double(rowData[3])));

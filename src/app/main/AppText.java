@@ -56,12 +56,12 @@ public enum AppText {
 				"3. Nagranie:\n" + 
 				"   - plik musi mieæ rozszerzenie .mp4.\n");
 	
-	AppText(String value) {
-		this.value = value;
+	AppText(String get) {
+		this.get = get;
 	}
-	private String value;
+	private String get;
 
-	public String value() {
-		return value;
+	public String get() {
+		return get;
 	}
 }

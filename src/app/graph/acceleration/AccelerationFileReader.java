@@ -3,9 +3,7 @@ package app.graph.acceleration;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.logging.Logger;
 import java.util.stream.Stream;
 
@@ -25,17 +23,12 @@ public class AccelerationFileReader {
 	private double maxY;
 	private double minX;
 	private double minY;
-	private int headerLineIndex;
-	private Map<String, String[]> allData = new HashMap<String, String[]>();
-	private double frequency;
-	private double startTime;
 
-	public AccelerationFileReader(String filePath, double startTime, double frequency) throws Exception {
+	public AccelerationFileReader(String filePath, double frequency) throws Exception {
 		super();
-		this.frequency = frequency;
 		Stream<String> stream = Files.lines(Paths.get(filePath));
 		stream.forEach(e -> {
-			if (!e.contains(AppText.PACKET_COUNTER.value())) {
+			if (!e.contains(AppText.PACKET_COUNTER.get())) {
 				String rowData[] = e.split(";");
 				accelerationMeasurements.add(new AccelerationMeasurement(new Integer(rowData[0]),
 						new Double(rowData[1]), new Double(rowData[2]), new Double(rowData[3])));
@@ -67,7 +60,6 @@ public class AccelerationFileReader {
 			return Double.compare(m1.getAccelerationZ(), m2.getAccelerationZ());
 		}).get().getAccelerationZ();
 
-		this.startTime = startTime;
 		this.maxX = 1 / frequency * rowNumber;
 		this.minX = new Double(0);
 		this.maxY = Double.max(Double.max(maxAccX, maxAccY), maxAccZ);
@@ -121,5 +113,4 @@ public class AccelerationFileReader {
 	public void setMinY(double minY) {
 		this.minY = minY;
 	}
-
 }

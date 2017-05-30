@@ -43,7 +43,6 @@ public class SceneGenerator {
 			}
 		});
 		mediaView.setMediaPlayer(player);
-
 		setCurrentlyPlaying(mediaView.getMediaPlayer());
 		layout.setStyle("-fx-background-color: cornsilk; -fx-font-size: 20; -fx-padding: 20; -fx-alignment: center;");
 		layout.getChildren().addAll(VBoxBuilder.create().spacing(10).alignment(Pos.CENTER)

@@ -78,9 +78,9 @@ public class SettingPanel extends JFrame {
 
 		showInfo.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				System.out.println(AppText.INFO_TEXT.value());
-				JOptionPane.showMessageDialog(null, AppText.INFO_TEXT.value(), "", 1);
-				System.out.println(AppText.INFO_TEXT.value());
+				System.out.println(AppText.INFO_TEXT.get());
+				JOptionPane.showMessageDialog(null, AppText.INFO_TEXT.get(), "", 1);
+				System.out.println(AppText.INFO_TEXT.get());
 			}
 		});
 
@@ -93,11 +93,11 @@ public class SettingPanel extends JFrame {
 				int result = fileChooser.showOpenDialog(newPanel);
 				if (result == JFileChooser.APPROVE_OPTION) {
 					if (!selectedAccFilePath.getText().equals(""))
-						accChart.resetChart(AppText.ACC_CHART.value());
+						accChart.resetChart(AppText.ACC_CHART.get());
 					File selectedFile = fileChooser.getSelectedFile();
 					selectedAccFilePath.setText(selectedFile.getAbsolutePath());
 					try {
-						accChart = new OpenSheet(selectedFile.getAbsolutePath(), AppText.ACC_CHART.value(),
+						accChart = new OpenSheet(selectedFile.getAbsolutePath(), AppText.ACC_CHART.get(),
 								new Double(frequency.getText()));
 						RefineryUtilities.centerFrameOnScreen(accChart);
 						accChart.setVisible(true);
@@ -123,11 +123,11 @@ public class SettingPanel extends JFrame {
 				int result = fileChooser.showOpenDialog(newPanel);
 				if (result == JFileChooser.APPROVE_OPTION) {
 					if (!selectedEulerFilePath.getText().equals(""))
-						eulerChart.resetChart(AppText.EULER_CHART.value());
+						eulerChart.resetChart(AppText.EULER_CHART.get());
 					File selectedFile = fileChooser.getSelectedFile();
 					selectedEulerFilePath.setText(selectedFile.getAbsolutePath());
 					try {
-						eulerChart = new OpenSheet(selectedFile.getAbsolutePath(), AppText.EULER_CHART.value(),
+						eulerChart = new OpenSheet(selectedFile.getAbsolutePath(), AppText.EULER_CHART.get(),
 								new Double(frequency.getText()));
 						RefineryUtilities.centerFrameOnScreen(eulerChart);
 						eulerChart.setVisible(true);
@@ -320,10 +320,10 @@ public class SettingPanel extends JFrame {
 		resetSetting.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (!selectedAccFilePath.getText().equals("")) {
-					accChart.resetChart(AppText.ACC_CHART.value());
+					accChart.resetChart(AppText.ACC_CHART.get());
 				}
 				if (!selectedEulerFilePath.getText().equals("")) {
-					eulerChart.resetChart(AppText.EULER_CHART.value());
+					eulerChart.resetChart(AppText.EULER_CHART.get());
 				}
 				if (!selectedVideoPath.getText().equals("")) {
 					player.resetPlayer();

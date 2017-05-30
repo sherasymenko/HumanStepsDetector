@@ -5,11 +5,13 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Frame;
 import java.io.IOException;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.logging.Logger;
 
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -17,7 +19,6 @@ import javax.swing.SwingUtilities;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
-import org.jfree.chart.plot.Marker;
 import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.chart.plot.ValueMarker;
 import org.jfree.chart.plot.XYPlot;
@@ -36,6 +37,7 @@ import app.main.SettingPanel;
 
 @SuppressWarnings("serial")
 public class OpenSheet extends ApplicationFrame {
+	private final Logger LOGGER = Logger.getLogger(ApplicationFrame.class.getName());
 	private JPanel content = new JPanel(new BorderLayout());
 	private XYSeriesCollection dataset = new XYSeriesCollection();
 	private XYSeries[] graphs;
@@ -45,10 +47,9 @@ public class OpenSheet extends ApplicationFrame {
 	private Timer timer;
 	private AccelerationFileReader accReader;
 	private EulerOrientationFileReader eulerReader;
-	private Draw draw = new Draw();
+	private Draw draw;
 	private int index = 0;
-	private double timeTest = 0;
-	private boolean isClean = false;
+	private double timeValue = 0;
 	private int i = 0;
 	private Double frequency;
 	private String chartType;
@@ -56,32 +57,32 @@ public class OpenSheet extends ApplicationFrame {
 	public boolean toClean = false;
 
 	public OpenSheet(String filePath, String chartType, Double frequency) throws Exception {
-		super(AppText.APPLICATION_TITLE.value());
+		super(AppText.APPLICATION_TITLE.get());
 		this.frequency = frequency;
 		this.chartType = chartType;
 		try {
-			if (chartType.equals(AppText.ACC_CHART.value())) {
-				accReader = new AccelerationFileReader(filePath, new Double(0), frequency);
+			if (chartType.equals(AppText.ACC_CHART.get())) {
+				accReader = new AccelerationFileReader(filePath, frequency);
 			} else {
-				eulerReader = new EulerOrientationFileReader(filePath, new Double(0), frequency);
+				eulerReader = new EulerOrientationFileReader(filePath, frequency);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		graphs = new XYSeries[3];
-		if (chartType.equals(AppText.ACC_CHART.value())) {
-			graphs[0] = new XYSeries(AppText.ACC_X.value());
-			graphs[1] = new XYSeries(AppText.ACC_Y.value());
-			graphs[2] = new XYSeries(AppText.ACC_Z.value());
-			xylineChart = ChartFactory.createXYLineChart(AppText.ACC_CHART_TITLE.value(),
-					AppText.X_AXIX_CHART_LABEL.value(), AppText.Y_AXIX_ACC_CHART_LABEL.value(), createDataset(),
+		if (chartType.equals(AppText.ACC_CHART.get())) {
+			graphs[0] = new XYSeries(AppText.ACC_X.get());
+			graphs[1] = new XYSeries(AppText.ACC_Y.get());
+			graphs[2] = new XYSeries(AppText.ACC_Z.get());
+			xylineChart = ChartFactory.createXYLineChart(AppText.ACC_CHART_TITLE.get(),
+					AppText.X_AXIX_CHART_LABEL.get(), AppText.Y_AXIX_ACC_CHART_LABEL.get(), createDataset(),
 					PlotOrientation.VERTICAL, true, true, false);
 		} else {
-			graphs[0] = new XYSeries(AppText.EULER_X.value());
-			graphs[1] = new XYSeries(AppText.EULER_Y.value());
-			graphs[2] = new XYSeries(AppText.EULER_Z.value());
-			xylineChart = ChartFactory.createXYLineChart(AppText.EULER_CHART_TITLE.value(),
-					AppText.X_AXIX_CHART_LABEL.value(), AppText.Y_AXIX_EULER_CHART_LABEL.value(), createDataset(),
+			graphs[0] = new XYSeries(AppText.EULER_X.get());
+			graphs[1] = new XYSeries(AppText.EULER_Y.get());
+			graphs[2] = new XYSeries(AppText.EULER_Z.get());
+			xylineChart = ChartFactory.createXYLineChart(AppText.EULER_CHART_TITLE.get(),
+					AppText.X_AXIX_CHART_LABEL.get(), AppText.Y_AXIX_EULER_CHART_LABEL.get(), createDataset(),
 					PlotOrientation.VERTICAL, true, true, false);
 		}
 
@@ -89,7 +90,7 @@ public class OpenSheet extends ApplicationFrame {
 		chartPanel.setPreferredSize(new java.awt.Dimension(1000, 300));
 		chartPanel.setMouseZoomable(false);
 		xyPlot = xylineChart.getXYPlot();
-		if (chartType.equals(AppText.ACC_CHART.value())) {
+		if (chartType.equals(AppText.ACC_CHART.get())) {
 			xyPlot.getDomainAxis().setRange(accReader.getMinX(), accReader.getMaxX());
 			xyPlot.getRangeAxis().setRange(accReader.getMinY(), accReader.getMaxY());
 		} else {
@@ -133,7 +134,7 @@ public class OpenSheet extends ApplicationFrame {
 			graphs[i].clear();
 		}
 		index = 0;
-		timeTest = 0;
+		timeValue = 0;
 		dataset = new XYSeriesCollection();
 		index = 0;
 		if (timer != null) {
@@ -161,10 +162,10 @@ public class OpenSheet extends ApplicationFrame {
 			dataZ[i] = String.valueOf(a.getAccelerationZ());
 			i++;
 		});
-		allData.put(AppText.ACC_X_AXIS_IN_FILE.value(), dataX);
-		allData.put(AppText.ACC_Y_AXIS_IN_FILE.value(), dataY);
-		allData.put(AppText.ACC_Z_AXIS_IN_FILE.value(), dataZ);
-		allData.put(AppText.PACKET_COUNTER.value(), pc);
+		allData.put(AppText.ACC_X_AXIS_IN_FILE.get(), dataX);
+		allData.put(AppText.ACC_Y_AXIS_IN_FILE.get(), dataY);
+		allData.put(AppText.ACC_Z_AXIS_IN_FILE.get(), dataZ);
+		allData.put(AppText.PACKET_COUNTER.get(), pc);
 		return allData;
 
 	}
@@ -183,10 +184,10 @@ public class OpenSheet extends ApplicationFrame {
 			dataZ[i] = String.valueOf(a.getYaw());
 			i++;
 		});
-		allData.put(AppText.ACC_X_AXIS_IN_FILE.value(), dataX);
-		allData.put(AppText.ACC_Y_AXIS_IN_FILE.value(), dataY);
-		allData.put(AppText.ACC_Z_AXIS_IN_FILE.value(), dataZ);
-		allData.put(AppText.PACKET_COUNTER.value(), pc);
+		allData.put(AppText.ACC_X_AXIS_IN_FILE.get(), dataX);
+		allData.put(AppText.ACC_Y_AXIS_IN_FILE.get(), dataY);
+		allData.put(AppText.ACC_Z_AXIS_IN_FILE.get(), dataZ);
+		allData.put(AppText.PACKET_COUNTER.get(), pc);
 		return allData;
 
 	}
@@ -199,21 +200,20 @@ public class OpenSheet extends ApplicationFrame {
 			}
 			xylineChart.getXYPlot().clearDomainMarkers();
 			index = 0;
-			timeTest = 0;
+			timeValue = 0;
 		}
 		timer = new Timer();
 
-		if (chartType.equals(AppText.ACC_CHART.value())) {
-			eulerReader = new EulerOrientationFileReader(eulerFilePath, new Double(0), frequency);
+		if (chartType.equals(AppText.ACC_CHART.get())) {
+			eulerReader = new EulerOrientationFileReader(eulerFilePath, frequency);
 			EulerOrientationDataAnalyzer a = new EulerOrientationDataAnalyzer(
 					eulerReader.getEulerOrientationMeasurement());
 			List<Integer> list = a.getList();
 			List<Integer> maxList = a.getMaxList();
 			List<Integer> minList = a.getMinList();
 			List<Double> iList = a.getPointTime(eulerReader.getEulerOrientationMeasurement(), list, frequency);
-			Map<String, String[]> allDataTest = convertAcc(accReader.getAccelerationMeasurements());
-			draw = new Draw(accReader.getRowNumber(), timer, index, timeTest, isClean, allDataTest, list, maxList,
-					minList, iList);
+			Map<String, String[]> allData = convertAcc(accReader.getAccelerationMeasurements());
+			draw = new Draw(accReader.getRowNumber(), timer, index, timeValue, allData, list, maxList, minList, iList);
 		} else {
 			EulerOrientationDataAnalyzer a = new EulerOrientationDataAnalyzer(
 					eulerReader.getEulerOrientationMeasurement());
@@ -221,24 +221,18 @@ public class OpenSheet extends ApplicationFrame {
 			List<Integer> maxList = a.getMaxList();
 			List<Integer> minList = a.getMinList();
 			List<Double> iList = a.getPointTime(eulerReader.getEulerOrientationMeasurement(), list, frequency);
-			Map<String, String[]> allDataTest = convertEuler(eulerReader.getEulerOrientationMeasurement());
-			draw = new Draw(eulerReader.getRowNumber(), timer, index, timeTest, isClean, allDataTest, list, maxList,
-					minList, iList);
-
+			Map<String, String[]> allData = convertEuler(eulerReader.getEulerOrientationMeasurement());
+			draw = new Draw(eulerReader.getRowNumber(), timer, index, timeValue, allData, list, maxList, minList,
+					iList);
 		}
-
 		long period = (long) ((1 / frequency * 1000) / speed);
 		timer.schedule(draw, 0, period);
 	}
 
 	public void pauseDraw(String filePath) {
 		index = draw.getI();
-		timeTest = draw.getTime();
+		timeValue = draw.getTime();
 		timer.cancel();
-	}
-
-	public void restartDraw() {
-
 	}
 
 	private XYDataset createDataset() {
@@ -246,14 +240,6 @@ public class OpenSheet extends ApplicationFrame {
 			dataset.addSeries(graphs[i]);
 		}
 		return dataset;
-	}
-
-	public boolean isClean() {
-		return isClean;
-	}
-
-	public void setClean(boolean isClean) {
-		this.isClean = isClean;
 	}
 
 	private class Draw extends TimerTask {
@@ -265,7 +251,7 @@ public class OpenSheet extends ApplicationFrame {
 		List<Integer> minList;
 		int rowNumber;
 
-		public Draw(int rowNumber, Timer timer, int index, double time, boolean isClean, Map<String, String[]> allData,
+		public Draw(int rowNumber, Timer timer, int index, double time, Map<String, String[]> allData,
 				List<Integer> list, List<Integer> maxList, List<Integer> minList, List<Double> iList) {
 			this.rowNumber = rowNumber;
 			i = index;
@@ -274,9 +260,6 @@ public class OpenSheet extends ApplicationFrame {
 			this.list = list;
 			this.maxList = maxList;
 			this.minList = minList;
-		}
-
-		public Draw() {
 		}
 
 		public int getI() {
@@ -291,21 +274,17 @@ public class OpenSheet extends ApplicationFrame {
 			try {
 				if ((rowNumber - 1) != i) {
 					toClean = false;
-					graphs[0].add(time, new Double(allData.get(AppText.ACC_X_AXIS_IN_FILE.value())[i]));
-					graphs[1].add(time, new Double(allData.get(AppText.ACC_Y_AXIS_IN_FILE.value())[i]));
-					graphs[2].add(time, new Double(allData.get(AppText.ACC_Z_AXIS_IN_FILE.value())[i]));
-
-					if (minList.contains(new Integer(allData.get(AppText.PACKET_COUNTER.value())[i]))) {
-						Marker m = new ValueMarker(time, Color.BLACK, new BasicStroke(3f));
-						xylineChart.getXYPlot().addDomainMarker(m);
+					graphs[0].add(time, new Double(allData.get(AppText.ACC_X_AXIS_IN_FILE.get())[i]));
+					graphs[1].add(time, new Double(allData.get(AppText.ACC_Y_AXIS_IN_FILE.get())[i]));
+					graphs[2].add(time, new Double(allData.get(AppText.ACC_Z_AXIS_IN_FILE.get())[i]));
+					if (minList.contains(new Integer(allData.get(AppText.PACKET_COUNTER.get())[i]))) {
+						xylineChart.getXYPlot().addDomainMarker(new ValueMarker(time, Color.BLACK, new BasicStroke(3f)));
 					}
-					if (maxList.contains(new Integer(allData.get(AppText.PACKET_COUNTER.value())[i]))) {
-						Marker m = new ValueMarker(time, Color.DARK_GRAY, new BasicStroke(2f));
-						xylineChart.getXYPlot().addDomainMarker(m);
+					if (maxList.contains(new Integer(allData.get(AppText.PACKET_COUNTER.get())[i]))) {
+						xylineChart.getXYPlot().addDomainMarker(new ValueMarker(time, Color.DARK_GRAY, new BasicStroke(2f)));
 					}
-					if (list.contains(new Integer(allData.get(AppText.PACKET_COUNTER.value())[i]))) {
-						Marker m = new ValueMarker(time, Color.GRAY, new BasicStroke(2f));
-						xylineChart.getXYPlot().addDomainMarker(m);
+					if (list.contains(new Integer(allData.get(AppText.PACKET_COUNTER.get())[i]))) {
+						xylineChart.getXYPlot().addDomainMarker(new ValueMarker(time, Color.GRAY, new BasicStroke(2f)));
 					}
 					time = time + 1 / frequency;
 					i++;
@@ -315,7 +294,7 @@ public class OpenSheet extends ApplicationFrame {
 					timer.cancel();
 				}
 			} catch (NumberFormatException e) {
-				e.printStackTrace();
+				LOGGER.warning(new Date() + " NumberFormatException: " + e.getMessage());
 			}
 		}
 	}

@@ -33,18 +33,11 @@ public class EulerOrientationDataAnalyzer {
 			return Double.compare(m1.getRoll(), m2.getRoll());
 		}).get().getRoll();
 		boolean minus = false;
-		System.out.println("min = " + min);
-		System.out.println("init = " + init);
-		System.out.println("max = " + max);
-		System.out.println("max - min = " + (max - min));
-		System.out.println("(max - min) / 2 = " + ((max - min) / 2));
-		System.out.println("(max - min) / 2 + min = " + ((max - min) / 2 + min));
 		if (Double.compare((max - min) / 2 + min, init) < 0) {
 			minus = true;
 		} else {
 			minus = false;
 		}
-		System.out.println("minus = " + minus);
 		return minus;
 	}
 
@@ -91,9 +84,7 @@ public class EulerOrientationDataAnalyzer {
 						}
 						previos = action.getRoll();
 					}
-
 				} else {
-
 					if (new Double(action.getRoll()).compareTo(initRoll + new Double(5)) > 0) {
 						if (startMax) {
 							addToList(list, action.getPacketCounter());
@@ -140,7 +131,6 @@ public class EulerOrientationDataAnalyzer {
 		List<Double> list = new ArrayList<Double>();
 		eulerOrientationMeasurement.forEach(action -> {
 			time = time + 1 / frequency;
-
 			if (listPC.contains(action.getPacketCounter())) {
 				list.add(time);
 			}
@@ -158,39 +148,11 @@ public class EulerOrientationDataAnalyzer {
 		return list;
 	}
 
-	public void setList(List<Integer> list) {
-		this.list = list;
-	}
-
 	public List<Integer> getMaxList() {
 		return maxList;
 	}
 
-	public void setMaxList(List<Integer> maxList) {
-		this.maxList = maxList;
-	}
-
 	public List<Integer> getMinList() {
 		return minList;
-	}
-
-	public void setMinList(List<Integer> minList) {
-		this.minList = minList;
-	}
-
-	public int getIterator() {
-		return iterator;
-	}
-
-	public void setIterator(int iterator) {
-		this.iterator = iterator;
-	}
-
-	public List<Integer> getIteratorList() {
-		return iteratorList;
-	}
-
-	public void setIteratorList(List<Integer> iteratorList) {
-		this.iteratorList = iteratorList;
 	}
 }

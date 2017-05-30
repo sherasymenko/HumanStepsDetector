@@ -5,7 +5,6 @@ public class AccelerationMeasurement {
 	private double accelerationX;
 	private double accelerationY;
 	private double accelerationZ;
-	public boolean isMotionless;
 
 	public AccelerationMeasurement(int packetCounter, double accelerationX, double accelerationY, double accelerationZ) {
 		super();
@@ -45,13 +44,5 @@ public class AccelerationMeasurement {
 
 	public void setAccelerationZ(double accelerationZ) {
 		this.accelerationZ = accelerationZ;
-	}
-
-	public boolean isMotionless() {
-		return isMotionless;
-	}
-
-	public void setMotionless(boolean isMotionless) {
-		this.isMotionless = isMotionless;
 	}
 }
