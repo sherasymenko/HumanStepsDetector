@@ -169,7 +169,6 @@ public class SettingPanel extends JFrame {
 							try {
 								player.selectVideo(selectedVideoPath.getText());
 							} catch (MediaException ex) {
-								System.out.println("test12311!!!!!1");
 							}
 						}
 					});
@@ -264,14 +263,14 @@ public class SettingPanel extends JFrame {
 					if (!selectedAccFilePath.getText().equals("")) {
 						accChart.setEulerFilePath(selectedEulerFilePath.getText());
 						try {
-							accChart.startDraw(selectedAccFilePath.getText(), false, getSpeed(radioList));
+							accChart.startDraw(selectedAccFilePath.getText(), getSpeed(radioList));
 						} catch (IOException e1) {
 							e1.printStackTrace();
 						}
 					}
 					if (!selectedEulerFilePath.getText().equals("")) {
 						try {
-							eulerChart.startDraw(selectedEulerFilePath.getText(), false, getSpeed(radioList));
+							eulerChart.startDraw(selectedEulerFilePath.getText(), getSpeed(radioList));
 						} catch (IOException e1) {
 							e1.printStackTrace();
 						}
@@ -294,14 +293,14 @@ public class SettingPanel extends JFrame {
 				} else if (start.getText().equals("Restart")) {
 					if (!selectedAccFilePath.getText().equals("")) {
 						try {
-							accChart.startDraw(selectedAccFilePath.getText(), true, getSpeed(radioList));
+							accChart.startDraw(selectedAccFilePath.getText(), getSpeed(radioList));
 						} catch (IOException e1) {
 							e1.printStackTrace();
 						}
 					}
 					if (!selectedEulerFilePath.getText().equals("")) {
 						try {
-							eulerChart.startDraw(selectedEulerFilePath.getText(), true, getSpeed(radioList));
+							eulerChart.startDraw(selectedEulerFilePath.getText(), getSpeed(radioList));
 						} catch (IOException e1) {
 							e1.printStackTrace();
 						}

@@ -192,7 +192,7 @@ public class OpenSheet extends ApplicationFrame {
 
 	}
 
-	public void startDraw(String filePath, boolean toCleantest, double speed) throws IOException {
+	public void startDraw(String filePath, double speed) throws IOException {
 		if (toClean) {
 			SettingPanel.setRestartButton();
 			for (int i = 0; i < graphs.length; i++) {
@@ -208,22 +208,19 @@ public class OpenSheet extends ApplicationFrame {
 			eulerReader = new EulerOrientationFileReader(eulerFilePath, frequency);
 			EulerOrientationDataAnalyzer a = new EulerOrientationDataAnalyzer(
 					eulerReader.getEulerOrientationMeasurement());
-			List<Integer> list = a.getList();
-			List<Integer> maxList = a.getMaxList();
-			List<Integer> minList = a.getMinList();
-			List<Double> iList = a.getPointTime(eulerReader.getEulerOrientationMeasurement(), list, frequency);
+			List<Integer> list = a.getStepPeriodsPcList();
+			List<Integer> maxList = a.getSwingInitPcList();
+			List<Integer> minList = a.getStanceInitPcList();
 			Map<String, String[]> allData = convertAcc(accReader.getAccelerationMeasurements());
-			draw = new Draw(accReader.getRowNumber(), timer, index, timeValue, allData, list, maxList, minList, iList);
+			draw = new Draw(accReader.getRowNumber(), timer, index, timeValue, allData, list, maxList, minList);
 		} else {
 			EulerOrientationDataAnalyzer a = new EulerOrientationDataAnalyzer(
 					eulerReader.getEulerOrientationMeasurement());
-			List<Integer> list = a.getList();
-			List<Integer> maxList = a.getMaxList();
-			List<Integer> minList = a.getMinList();
-			List<Double> iList = a.getPointTime(eulerReader.getEulerOrientationMeasurement(), list, frequency);
+			List<Integer> list = a.getStepPeriodsPcList();
+			List<Integer> maxList = a.getSwingInitPcList();
+			List<Integer> minList = a.getStanceInitPcList();
 			Map<String, String[]> allData = convertEuler(eulerReader.getEulerOrientationMeasurement());
-			draw = new Draw(eulerReader.getRowNumber(), timer, index, timeValue, allData, list, maxList, minList,
-					iList);
+			draw = new Draw(eulerReader.getRowNumber(), timer, index, timeValue, allData, list, maxList, minList);
 		}
 		long period = (long) ((1 / frequency * 1000) / speed);
 		timer.schedule(draw, 0, period);
@@ -252,7 +249,7 @@ public class OpenSheet extends ApplicationFrame {
 		int rowNumber;
 
 		public Draw(int rowNumber, Timer timer, int index, double time, Map<String, String[]> allData,
-				List<Integer> list, List<Integer> maxList, List<Integer> minList, List<Double> iList) {
+				List<Integer> list, List<Integer> maxList, List<Integer> minList) {
 			this.rowNumber = rowNumber;
 			i = index;
 			this.time = time;
