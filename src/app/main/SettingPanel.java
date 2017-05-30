@@ -49,7 +49,7 @@ public class SettingPanel extends JFrame {
 	private JRadioButton speed3 = new JRadioButton("0.5");
 	private JRadioButton speed4 = new JRadioButton("1");
 	private JLabel frequencyLabel = new JLabel("Czêstotliwoœæ");
-	private JTextField frequency = new JTextField("75", 10);
+	private JTextField frequency = new JTextField("100", 10);
 	private JLabel frequencyMeasurement = new JLabel("Hz");
 	private static JButton start = new JButton("Start");
 	private JButton resetSetting = new JButton("Wyczyœæ ustawienia");
@@ -66,7 +66,7 @@ public class SettingPanel extends JFrame {
 	private PlayVideo player;
 
 	public SettingPanel() {
-		super("Panel sterowania");
+		super("Ustawienia");
 		elementsSetting();
 		addElementsToPanel();
 		panelSetting();
@@ -342,7 +342,7 @@ public class SettingPanel extends JFrame {
 				speed2.setEnabled(true);
 				speed3.setEnabled(true);
 				speed4.setEnabled(true);
-				frequency.setText("75");
+				frequency.setText("100");
 				frequency.setEditable(true);
 				start.setText("Start");
 				start.setEnabled(false);
@@ -389,7 +389,7 @@ public class SettingPanel extends JFrame {
 	private void panelSetting() {
 		setSize(600, 1000);
 		setVisible(true);
-		newPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Ustawienia"));
+		newPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), ""));
 		add(newPanel);
 		pack();
 		setLocationRelativeTo(null);
@@ -400,7 +400,7 @@ public class SettingPanel extends JFrame {
 			public boolean accept(File f) {
 				if (f.isDirectory()) {
 					return true;
-				} else if (f.getName().endsWith(extension)) {
+				} else if (f.getName().endsWith(extension) || f.getName().endsWith(extension.toUpperCase())) {
 					return true;
 				} else {
 					return false;

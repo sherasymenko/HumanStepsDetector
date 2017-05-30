@@ -4,22 +4,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class EulerOrientationDataAnalyzer {
-	Double previos = new Double(0);
-	Double maxValue = new Double(0);
-	int maxValuePC = 0;
-	Double minValue = new Double(0);
-	int minValuePC = 0;
-	Double initRoll = new Double(0);
-	boolean start = true;
-	boolean startMax = true;
-	boolean islikeInit = false;
-	List<Integer> list = new ArrayList<Integer>();
-	List<Integer> maxList = new ArrayList<Integer>();
-	List<Integer> minList = new ArrayList<Integer>();
-	int iterator = 0;
-	List<Integer> iteratorList = new ArrayList<Integer>();
-	double time = new Double(0);
-	boolean chartTypeMinus = false;
+	private Double previos = new Double(0);
+	private int maxValuePC = 0;
+	private int minValuePC = 0;
+	private Double initRoll = new Double(0);
+	private boolean start = true;
+	private boolean startMax = true;
+	private boolean islikeInit = false;
+	private List<Integer> list = new ArrayList<Integer>();
+	private List<Integer> maxList = new ArrayList<Integer>();
+	private List<Integer> minList = new ArrayList<Integer>();
+	private int iterator = 0;
+	private double time = new Double(0);
 
 	public boolean isChartTypeMinus(List<EulerOrientationMeasurement> eulerOrientationMeasurement) {
 		double max = new Double(0);
@@ -59,7 +55,6 @@ public class EulerOrientationDataAnalyzer {
 							startMax = false;
 						}
 						if (previos.compareTo(action.getRoll()) > 0) {
-							maxValue = action.getRoll();
 							maxValuePC = action.getPacketCounter();
 						}
 						previos = action.getRoll();
@@ -68,7 +63,6 @@ public class EulerOrientationDataAnalyzer {
 					} else if (new Double(action.getRoll()).compareTo(initRoll + new Double(5)) > 0) {
 						startMax = true;
 						if (previos.compareTo(action.getRoll()) < 0) {
-							minValue = action.getRoll();
 							minValuePC = action.getPacketCounter();
 						}
 						previos = action.getRoll();
@@ -91,7 +85,6 @@ public class EulerOrientationDataAnalyzer {
 							startMax = false;
 						}
 						if (previos.compareTo(action.getRoll()) < 0) {
-							maxValue = action.getRoll();
 							maxValuePC = action.getPacketCounter();
 						}
 						previos = action.getRoll();
@@ -100,7 +93,6 @@ public class EulerOrientationDataAnalyzer {
 					} else if (new Double(action.getRoll()).compareTo(initRoll - new Double(5)) < 0) {
 						startMax = true;
 						if (previos.compareTo(action.getRoll()) > 0) {
-							minValue = action.getRoll();
 							minValuePC = action.getPacketCounter();
 						}
 						previos = action.getRoll();

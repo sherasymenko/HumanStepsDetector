@@ -1,10 +1,10 @@
 package app.main;
 
 public enum AppText {
-	APPLICATION_TITLE("Wykrywacz ludzkich kroków"),
+	APPLICATION_TITLE("Rejestrator ludzkich kroków"),
 	ACC_CHART("acceleration"),
 	EULER_CHART("euler_orientation"),
-	ACC_CHART_TITLE("Wykres przyspieszenia"),
+	ACC_CHART_TITLE("Przyspieszenie"),
 	EULER_CHART_TITLE("K¹ty Eulera"),
 	ACC_X("Przyspieszenie X"),
 	ACC_Y("Przyspieszenie Y"),
@@ -23,14 +23,15 @@ public enum AppText {
 	EULER_Y_AXIS_IN_FILE("Pitch"),
 	EULER_Z_AXIS_IN_FILE("Yaw"),
 	INFO_TEXT("INSTRUKCJA DOTYCZ¥CA POPRAWNEJ ZAWARTOŒCI PLIKÓW\n" + 
-				"1. Plik z danymi przyspieszenia:\n" + 
+				"1. Aby algorytm zadzia³a³ poprawnie, dane musz¹ byæ pobrane z czujnika ze stopy.\n" + 
+				"2. Plik z danymi przyspieszenia:\n" + 
 				"   - plik musi mieæ rozszerzenie .txt;\n" + 
 				"   - pierwszy wiersz zawiera nazwy danych (kolumn), rozdzielone œrednikami - PacketCounter;Acc_X;Acc_Y;Acc_Z:\n" + 
 				"      * PacketCounter - jest to numer (identyfikator) pomiaru,\n" + 
 				"      * Acc_X - pomiar przyspieszenia w osi X czujnika,\n" + 
 				"      * Acc_Y - pomiar przyspieszenia w osi Y czujnika,\n" + 
 				"      * Acc_Z - pomiar przyspieszenia w osi Z czujnika;\n" + 
-				"   - ka¿dy nastêpny wiersz zawiera dane dla ka¿dej kolumny, rozdzielone œrednikami;\n" + 
+				"   - ka¿dy nastêpny wiersz zawiera dane dla ka¿dej kolumny, dane musz¹ byæ rozdzielone œrednikami;\n" + 
 				"   - przyk³adowa zawartoœæ pliku:\n" + 
 				"      -----------------------------------------------------\n" + 
 				"      PacketCounter;Acc_X;Acc_Y;Acc_Z\n" + 
@@ -38,14 +39,14 @@ public enum AppText {
 				"      31477;2.495497;6.051737;7.319324\n" + 
 				"      . . .\n" + 
 				"      -----------------------------------------------------\n" + 
-				"2. Plik z danymi k¹tów Eulera:\n" + 
+				"3. Plik z danymi k¹tów Eulera:\n" + 
 				"   - plik musi mieæ rozszerzenie .txt;\n" + 
 				"   - pierwszy wiersz zawiera nazwy danych (kolumn), rozdzielone œrednikami - PacketCounter;Roll;Pitch;Yaw:\n" + 
 				"      * PacketCounter - jest to numer (identyfikator) pomiaru,\n" + 
 				"      * Roll - pomiar k¹tu obrotu dooko³a osi X czujnika,\n" + 
 				"      * Pitch - pomiar k¹tu obrotu dooko³a osi Y czujnika,\n" + 
 				"      * Yaw - pomiar k¹tu obrotu dooko³a osi Z czujnika;\n" + 
-				"   - ka¿dy nastêpny wiersz zawiera dane dla ka¿dej kolumny, rozdzielone œrednikami;\n" + 
+				"   - ka¿dy nastêpny wiersz zawiera dane dla ka¿dej kolumny, dane musz¹ byæ rozdzielone œrednikami;\n" + 
 				"   - przyk³adowa zawartoœæ pliku:\n" + 
 				"      -----------------------------------------------------\n" + 
 				"      PacketCounter;Roll;Pitch;Yaw\n" + 
@@ -53,7 +54,7 @@ public enum AppText {
 				"      31477;39.691981;-14.743071;89.959014\n" + 
 				"      . . .\n" + 
 				"      -----------------------------------------------------\n" + 
-				"3. Nagranie:\n" + 
+				"4. Nagranie:\n" + 
 				"   - plik musi mieæ rozszerzenie .mp4.\n");
 	
 	AppText(String get) {
