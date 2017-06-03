@@ -8,10 +8,12 @@ public class EulerOrientationDataAnalyzer {
 	private List<Integer> swingInitPcList = new ArrayList<Integer>();
 	private List<Integer> stepPeriodsPcList = new ArrayList<Integer>();
 	private final Double deviation = new Double(5);
-	private Double initRoll = new Double(0);
+	private Double initX = new Double(0);
+	private Double currentX = new Double(0);
 	private Double previos = new Double(0);
-	private int stanceInitPc = 0;
-	private int swingInitPc = 0;
+	private int stanceInitId = 0;
+	private int swingInitId = 0;
+	private int currentId = 0;
 	private boolean start = true;
 	private boolean isNearSwingInit = true;
 	private boolean isLikeInit = false;
@@ -21,70 +23,75 @@ public class EulerOrientationDataAnalyzer {
 		eulerOrientationMeasurement.forEach(action -> {
 			eulerMeasurement.add(action);
 		});
-		initRoll = eulerMeasurement.get(0).getRoll();
-		eulerMeasurement.forEach(action -> {
+		initX = eulerMeasurement.get(0).getRoll();
+		eulerMeasurement.forEach(p -> {
+			currentX = p.getRoll();
+			currentId = p.getPacketCounter();
 			if (start) {
-				previos = action.getRoll();
+				previos = currentX;
 				start = false;
 			} else {
 				if (isChartTypeMinus(eulerOrientationMeasurement)) {
-					if (new Double(action.getRoll()).compareTo(initRoll - deviation) < 0) {
+					if (currentX.compareTo(initX - deviation) < 0) {
 						if (isNearSwingInit) {
-							addToList(stepPeriodsPcList, action.getPacketCounter());
+							addToList(stepPeriodsPcList, currentId);
 							isNearSwingInit = false;
 						}
-						if (previos.compareTo(action.getRoll()) > 0) {
-							swingInitPc = action.getPacketCounter();
+						if (previos.compareTo(currentX) > 0) {
+							swingInitId = currentId;
 						}
-						previos = action.getRoll();
-						addToList(stanceInitPcList, stanceInitPc);
+						addToList(stanceInitPcList, stanceInitId);
 						isLikeInit = true;
-					} else if (new Double(action.getRoll()).compareTo(initRoll + deviation) > 0) {
+						previos = currentX;
+					} else if (currentX.compareTo(initX + deviation) > 0) {
+						if (previos.compareTo(currentX) < 0) {
+							stanceInitId = currentId;
+						}
+						addToList(swingInitPcList, swingInitId);
 						isNearSwingInit = true;
-						if (previos.compareTo(action.getRoll()) < 0) {
-							stanceInitPc = action.getPacketCounter();
-						}
-						previos = action.getRoll();
-						addToList(swingInitPcList, swingInitPc);
 						isLikeInit = true;
+						previos = currentX;
 					} else {
-						addToList(swingInitPcList, swingInitPc);
-						addToList(stanceInitPcList, stanceInitPc);
 						if (isLikeInit) {
-							addToList(stepPeriodsPcList, action.getPacketCounter());
+							addToList(stepPeriodsPcList, currentId);
 							isLikeInit = false;
 						}
-						previos = action.getRoll();
+						addToList(swingInitPcList, swingInitId);
+						addToList(stanceInitPcList, stanceInitId);
+						isNearSwingInit = true;
+						previos = currentX;
 					}
 				} else {
-					if (new Double(action.getRoll()).compareTo(initRoll + deviation) > 0) {
+					if (currentX.compareTo(initX + deviation) > 0) {
 						if (isNearSwingInit) {
-							addToList(stepPeriodsPcList, action.getPacketCounter());
+							addToList(stepPeriodsPcList, currentId);
 							isNearSwingInit = false;
 						}
-						if (previos.compareTo(action.getRoll()) < 0) {
-							swingInitPc = action.getPacketCounter();
+						if (previos.compareTo(currentX) < 0) {
+							swingInitId = currentId;
 						}
-						previos = action.getRoll();
-						addToList(stanceInitPcList, stanceInitPc);
+						addToList(stanceInitPcList, stanceInitId);
 						isLikeInit = true;
-					} else if (new Double(action.getRoll()).compareTo(initRoll - deviation) < 0) {
+						previos = currentX;
+					} else if (currentX.compareTo(initX - deviation) < 0) {
+						if (previos.compareTo(currentX) > 0) {
+							stanceInitId = currentId;
+						}
+						addToList(swingInitPcList, swingInitId);
 						isNearSwingInit = true;
-						if (previos.compareTo(action.getRoll()) > 0) {
-							stanceInitPc = action.getPacketCounter();
-						}
-						previos = action.getRoll();
-						addToList(swingInitPcList, swingInitPc);
 						isLikeInit = true;
+						previos = currentX;
 					} else {
-						addToList(swingInitPcList, swingInitPc);
-						addToList(stanceInitPcList, stanceInitPc);
 						if (isLikeInit) {
-							addToList(stepPeriodsPcList, action.getPacketCounter());
+							addToList(stepPeriodsPcList, currentId);
 							isLikeInit = false;
 						}
-						previos = action.getRoll();
+						addToList(swingInitPcList, swingInitId);
+						addToList(stanceInitPcList, stanceInitId);
+						isNearSwingInit = true;
+						previos = currentX;
 					}
+
 				}
 			}
 		});
