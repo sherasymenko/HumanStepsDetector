@@ -10,7 +10,7 @@ public class EulerOrientationDataAnalyzer {
 	private final Double deviation = new Double(5);
 	private Double initX = new Double(0);
 	private Double currentX = new Double(0);
-	private Double previos = new Double(0);
+	private Double previous = new Double(0);
 	private int stanceInitId = 0;
 	private int swingInitId = 0;
 	private int currentId = 0;
@@ -28,29 +28,29 @@ public class EulerOrientationDataAnalyzer {
 			currentX = p.getRoll();
 			currentId = p.getPacketCounter();
 			if (start) {
-				previos = currentX;
+				previous = currentX;
 				start = false;
 			} else {
 				if (isChartTypeMinus(eulerOrientationMeasurement)) {
-					if (currentX.compareTo(initX + deviation) > 0) {
-						if (previos.compareTo(currentX) < 0) {
+					if (isFirstLarger(currentX, initX + deviation)) {
+						if (isFirstLarger(currentX, previous)) {
 							stanceInitId = currentId;
 						}
 						addToList(swingInitIdList, swingInitId);
 						isNearSwingInit = true;
 						isLikeInit = true;
-						previos = currentX;
-					} else if (currentX.compareTo(initX - deviation) < 0) {
+						previous = currentX;
+					} else if (isFirstLarger(initX - deviation, currentX)) {
 						if (isNearSwingInit) {
 							addToList(stepPeriodsIdList, currentId);
 							isNearSwingInit = false;
 						}
-						if (previos.compareTo(currentX) > 0) {
+						if (isFirstLarger(previous, currentX)) {
 							swingInitId = currentId;
 						}
 						addToList(stanceInitIdList, stanceInitId);
 						isLikeInit = true;
-						previos = currentX;
+						previous = currentX;
 					} else {
 						if (isLikeInit) {
 							addToList(stepPeriodsIdList, currentId);
@@ -59,28 +59,28 @@ public class EulerOrientationDataAnalyzer {
 						addToList(swingInitIdList, swingInitId);
 						addToList(stanceInitIdList, stanceInitId);
 						isNearSwingInit = true;
-						previos = currentX;
+						previous = currentX;
 					}
 				} else {
-					if (currentX.compareTo(initX + deviation) > 0) {
+					if (isFirstLarger(currentX, initX + deviation)) {
 						if (isNearSwingInit) {
 							addToList(stepPeriodsIdList, currentId);
 							isNearSwingInit = false;
 						}
-						if (previos.compareTo(currentX) < 0) {
+						if (isFirstLarger(currentX, previous)) {
 							swingInitId = currentId;
 						}
 						addToList(stanceInitIdList, stanceInitId);
 						isLikeInit = true;
-						previos = currentX;
-					} else if (currentX.compareTo(initX - deviation) < 0) {
-						if (previos.compareTo(currentX) > 0) {
+						previous = currentX;
+					} else if (isFirstLarger(initX - deviation, currentX)) {
+						if (isFirstLarger(previous, currentX)) {
 							stanceInitId = currentId;
 						}
 						addToList(swingInitIdList, swingInitId);
 						isNearSwingInit = true;
 						isLikeInit = true;
-						previos = currentX;
+						previous = currentX;
 					} else {
 						if (isLikeInit) {
 							addToList(stepPeriodsIdList, currentId);
@@ -89,7 +89,7 @@ public class EulerOrientationDataAnalyzer {
 						addToList(swingInitIdList, swingInitId);
 						addToList(stanceInitIdList, stanceInitId);
 						isNearSwingInit = true;
-						previos = currentX;
+						previous = currentX;
 					}
 				}
 			}
@@ -111,6 +111,10 @@ public class EulerOrientationDataAnalyzer {
 		if (!list.contains(pc)) {
 			list.add(pc);
 		}
+	}
+
+	private boolean isFirstLarger(Double v1, Double v2) {
+		return v1.compareTo(v2) > 0;
 	}
 
 	public List<Integer> getStepPeriodsPcList() {
